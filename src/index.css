@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ====================================================
+   DESIGN TOKENS - Clean & Minimal
+   ==================================================== */
+:root {
+  /* Brand palette */
+  --bg-dark:      #0F172A; /* Dark blue/gray */
+  --bg-card:      #1E293B; /* Slightly lighter for cards */
+  --accent:       #0EA5E9; /* Cyan / Light Blue */
+  --accent-hover: #38BDF8;
+  
+  --text-main:    #F8FAFC; /* Off-white */
+  --text-muted:   #94A3B8; /* Slate gray */
+  --text-dim:     #64748B;
+  
+  --border-subtle: rgba(255, 255, 255, 0.08);
+
+  --font-sans:    'Inter', system-ui, sans-serif;
+  --font-heading: 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* ====================================================
+   TAILWIND v4 THEME
+   ==================================================== */
+@theme {
+  --color-bg-dark:      #0F172A;
+  --color-bg-card:      #1E293B;
+  --color-accent:       #0EA5E9;
+  --color-text-main:    #F8FAFC;
+  --color-text-muted:   #94A3B8;
+  --font-family-sans:    'Inter', system-ui, sans-serif;
+  --font-family-heading: 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* ====================================================
+   GLOBAL RESET
+   ==================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ====================================================
+   SCROLLBAR
+   ==================================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-subtle); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* ====================================================
+   CLEAN UTILITIES
+   ==================================================== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  border-color: rgba(14, 165, 233, 0.3); /* Accent tint on hover */
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background-color: var(--accent);
+  color: #0F172A; /* Dark text for contrast on cyan */
+  font-weight: 600;
+  font-family: var(--font-sans);
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background-color: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  font-weight: 500;
+  font-family: var(--font-sans);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.font-heading { font-family: var(--font-heading); }
+
+/* ====================================================
+   SECTION ANCHOR SCROLL OFFSET (for sticky nav)
+   ==================================================== */
+section[id] { scroll-margin-top: 80px; }
+
+/* Remove previous complex gradients and classes */
+.gradient-text {
+  background: none;
+  color: var(--accent);
+  -webkit-text-fill-color: initial;
+}
+
+/* ====================================================
+   SUBTLE BACKGROUND GLOW EFFECTS
+   ==================================================== */
+@keyframes slow-pan {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.03; }
+  33% { transform: translate(10%, -10%) scale(1.1); opacity: 0.05; }
+  66% { transform: translate(-10%, 10%) scale(0.9); opacity: 0.04; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.03; }
+}
+
+.bg-glow {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  z-index: 0; /* lowest possible layer */
+  pointer-events: none;
+}
+
+.bg-glow-blob {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 50%;
+  filter: blur(140px);
+  will-change: transform, opacity;
+  animation: slow-pan 25s ease-in-out infinite alternate;
+}
+
+.bg-glow-1 {
+  background: radial-gradient(circle at center, rgba(14, 165, 233, 0.4), transparent 60%);
+  top: -20vh;
+  left: -20vw;
+}
+
+.bg-glow-2 {
+  background: radial-gradient(circle at center, rgba(56, 189, 248, 0.3), transparent 60%);
+  bottom: -20vh;
+  right: -20vw;
+  animation-delay: -12.5s; /* Offset phase */
+}
