@@ -1,35 +1,49 @@
-# Kanishk Gandecha — Personal Portfolio
+# 🌐 Kanishk Gandecha - Portfolio Website
 
-A modern, responsive personal portfolio website built with **React + Vite**, **Tailwind CSS v4**, **Framer Motion**, and **Lucide React**.
+Welcome to my personal portfolio website!
+This project showcases my skills, projects, and experience as a developer.
 
-## 🚀 Quick Start
+---
 
-```bash
-# 1. Navigate to the project folder
-cd portfolio
+## 🚀 Live Demo
 
-# 2. Install dependencies
-npm install
+🔗 Will be added soon
 
-# 3. Start the development server
-npm run dev
-```
+---
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+## 📌 About the Project
+
+This is a modern, responsive portfolio website built to highlight:
+
+* My technical skills
+* Featured projects
+* GitHub work
+* Contact information
+
+---
 
 ## 🛠️ Tech Stack
 
-| Technology     | Purpose                |
-|----------------|------------------------|
-| React 19       | UI framework           |
-| Vite 8         | Build tool             |
-| Tailwind CSS 4 | Styling                |
-| Framer Motion  | Animations             |
-| Lucide React   | Icons                  |
+* ⚡ HTML5, CSS3, JavaScript
+* ⚛️ (Add React / Vite if used)
+* 🎨 Modern UI/UX Design
+* 🚀 Deployed using Vercel / GitHub Pages
+
+---
+
+## 📂 Features
+
+* ✨ Clean and responsive UI
+* 📱 Mobile-friendly design
+* 🧑‍💻 Projects showcase section
+* 🔗 GitHub integration
+* 📄 Resume download option
+* 🌙 Dark theme (if applicable)
+
+---
 
 ## 📁 Folder Structure
 
-```
 portfolio/
 ├── public/
 │   └── resume.pdf          # Replace with your actual resume
@@ -60,44 +74,67 @@ portfolio/
 └── package.json
 ```
 
-## 🎨 Features
+## ⚙️ Installation & Setup
 
-- ✅ Dark / Light mode toggle with `localStorage` persistence
-- ✅ Fully responsive (mobile-first)
-- ✅ Smooth scroll navigation
-- ✅ Framer Motion page animations
-- ✅ Typewriter effect in Hero
-- ✅ Animated skill progress bars
-- ✅ Project cards with hover effects
-- ✅ Contact form UI (no backend)
-- ✅ SEO meta tags
+Clone the repository:
 
-## 📦 Build for Production
+```bash
+git clone https://github.com/yourusername/your-repo.git
+cd your-repo
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Build for production:
 
 ```bash
 npm run build
 ```
 
-Built files go to the `dist/` folder.
+---
 
-## 🌐 Deploy
+## 🌐 Deployment
 
-This portfolio can be deployed to:
-- [Vercel](https://vercel.com) — `vercel deploy`
-- [Netlify](https://netlify.com) — drag & drop `dist/`
-- [GitHub Pages](https://pages.github.com)
+This project can be deployed using:
 
-## 💰 Indian Currency Note
-
-> To display Indian currency (₹) anywhere in the project, use the `₹` symbol directly in JSX strings (e.g., `₹10,000`) instead of `$`. No code changes needed beyond updating string values in the relevant component.
-
-## ✏️ Customization
-
-- **Projects**: Edit `src/components/sections/Projects.jsx`
-- **Resume**: Replace `public/resume.pdf` with your actual resume PDF
-- **Colors**: Modify CSS custom properties in `src/index.css` under `:root`
-- **Personal info**: Update `About.jsx`, `Contact.jsx`, and `Hero.jsx`
+* Vercel (Recommended)
+* GitHub Pages
+* Netlify
 
 ---
 
-Made with ❤️ by Kanishk Gandecha
+
+## 📬 Contact Me
+
+* 📧 Email: gandechakanishk9@gmail.com
+* 💼 LinkedIn:https://www.linkedin.com/in/kanishk-gandecha-24b1a22b3/
+* 💻 GitHub: https://github.com/yourusernamkanishkgandecha
+
+---
+
+## ⭐ Acknowledgements
+
+* Inspiration from modern developer portfolios
+* Open-source community
+
+---
+
+## 📄 License
+
+This project is open-source and available under the MIT License.
+
+---
+
+⭐ If you like this project, consider giving it a star!
+
+
