@@ -10,13 +10,13 @@ const education = [
   },
   { 
     degree: 'Class XII – Science', 
-    school: 'Maharashtra State Board', 
+    school: 'Central Board of Secondary Education', 
     year: '2022 – 2023',
     details: 'Score: 72.6%' 
   },
   { 
     degree: 'Class X', 
-    school: 'Maharashtra State Board', 
+    school: 'Central Board of Secondary Education', 
     year: '2020 – 2021',
     details: 'Score: 88.6%' 
   },
