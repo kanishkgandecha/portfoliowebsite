@@ -102,7 +102,7 @@ export default function Hero() {
           </button>
           
           <a
-            href="https://drive.google.com/file/d/1Vs0WrUQQG2ku8KBRi795vZFIStpyU4sV/view?usp=sharing"
+            href="https://drive.google.com/file/d/1pcbhkZWd2hu5kP6HAa2PONVxAoIB15GD/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-secondary"
