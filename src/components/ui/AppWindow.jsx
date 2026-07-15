@@ -41,14 +41,14 @@ export default function AppWindow({
         userSelect: 'none',
       }}>
         {/* Left Side: Window Controls */}
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', width: '80px' }}>
+        <div className="window-controls" style={{ display: 'flex', gap: '6px', alignItems: 'center', width: '80px', flexShrink: 0 }}>
           <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#FF5F56', opacity: 0.85 }} />
           <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#FFBD2E', opacity: 0.85 }} />
           <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#27C93F', opacity: 0.85 }} />
         </div>
 
         {/* Center: Title */}
-        <div style={{ 
+        <div className="window-title" style={{ 
           fontFamily: 'var(--font-mono)', 
           fontSize: '0.72rem', 
           fontWeight: 650, 
@@ -57,6 +57,7 @@ export default function AppWindow({
           alignItems: 'center',
           gap: '0.4rem',
           letterSpacing: '-0.01em',
+          textAlign: 'center',
         }}>
           <span>{title}</span>
           {subtitle && (
@@ -68,12 +69,13 @@ export default function AppWindow({
         </div>
 
         {/* Right Side: Tab Status / Git details */}
-        <div style={{ 
+        <div className="window-right-text" style={{ 
           width: '80px', 
           textAlign: 'right', 
           fontFamily: 'var(--font-mono)', 
           fontSize: '0.65rem', 
           color: 'var(--text-tertiary)',
+          flexShrink: 0,
         }}>
           {rightText}
         </div>

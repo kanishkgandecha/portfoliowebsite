@@ -420,7 +420,7 @@ export default function Projects() {
 
         <AppWindow title="Projects — Product Browser" rightText="git:main">
           {/* Projects Layout Grid */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', padding: '2rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', padding: 'var(--window-padding)' }}>
             
             {/* Featured Showcase Card */}
             {featuredProject && (
@@ -489,7 +489,7 @@ export default function Projects() {
 
                   {/* Details Area */}
                   <div style={{
-                    padding: '2rem 2.25rem',
+                    padding: 'var(--window-padding)',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -591,7 +591,7 @@ export default function Projects() {
             {/* Grid Layout for other projects */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(310px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 310px), 1fr))',
               gap: '1.5rem',
             }}>
               {secondaryProjects.map((project) => {
@@ -653,7 +653,7 @@ export default function Projects() {
 
                     {/* Details */}
                     <div style={{
-                      padding: '1.5rem',
+                      padding: 'var(--window-padding)',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',

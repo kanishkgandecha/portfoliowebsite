@@ -29,7 +29,7 @@ export default function Experience() {
             gridTemplateColumns: '1fr',
             gap: '2.5rem',
             alignItems: 'start',
-            padding: '2rem',
+            padding: 'var(--window-padding)',
           }} className="md-grid-2col">
             
             {/* Left Column: Experience */}

@@ -132,7 +132,8 @@ export default function Hero() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+            className="hero-intro"
+            style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}
           >
             {/* Availability Badge */}
             <motion.div variants={itemVariants}>
@@ -168,6 +169,7 @@ export default function Hero() {
             {/* Subtitle Roles List */}
             <motion.div 
               variants={itemVariants} 
+              className="hero-roles"
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -234,9 +236,9 @@ export default function Hero() {
             {/* CTA Buttons */}
             <motion.div 
               variants={itemVariants} 
+              className="hero-ctas"
               style={{
                 display: 'flex',
-                flexWrap: 'wrap',
                 gap: '0.85rem',
                 marginTop: '0.5rem',
               }}
@@ -257,12 +259,12 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right Column: Desktop Info Panel (Development Metadata) */}
+          {/* Right Column: Info Panel (Development Metadata) */}
           <motion.div
             initial={{ opacity: 0, x: 25, scale: 0.98 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ type: 'spring', stiffness: 90, damping: 18, delay: 0.45 }}
-            className="hidden md:block"
+            className="hero-metadata-card"
           >
             <GlassPanel style={{ padding: '2rem' }}>
               <h3 style={{

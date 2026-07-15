@@ -50,13 +50,13 @@ export default function Contact() {
             gridTemplateColumns: '1fr',
             gap: '2.5rem',
             alignItems: 'start',
-            padding: '2rem',
+            padding: 'var(--window-padding)',
           }} className="md-grid-2col">
             
             {/* Left Column: Connect Form / Info */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ 
-                padding: '2rem',
+                padding: 'var(--window-padding)',
                 background: 'rgba(255,255,255,0.02)',
                 borderRadius: '12px',
                 border: '1px solid var(--border)'
@@ -128,9 +128,19 @@ export default function Contact() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {contactLinks.map((item) => {
                 const Icon = item.icon;
+                const handleRowClick = () => {
+                  if (item.copyable) {
+                    handleCopyEmail();
+                  } else {
+                    window.open(item.href, '_blank', 'noopener,noreferrer');
+                  }
+                };
+
                 return (
-                  <div
+                  <motion.div
                     key={item.id}
+                    onClick={handleRowClick}
+                    whileTap={{ scale: 0.98 }}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -138,7 +148,8 @@ export default function Contact() {
                       padding: '1.25rem 1.5rem',
                       background: 'rgba(255,255,255,0.02)',
                       borderRadius: '12px',
-                      border: '1px solid var(--border)'
+                      border: '1px solid var(--border)',
+                      cursor: 'pointer',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -174,7 +185,7 @@ export default function Contact() {
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
                       {item.copyable && (
                         <Button
                           variant="icon"
@@ -219,7 +230,7 @@ export default function Contact() {
                         </Button>
                       </a>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>

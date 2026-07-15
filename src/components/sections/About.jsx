@@ -39,6 +39,13 @@ export default function About() {
               dimmed={isDimmed}
               onMouseEnter={() => setHoveredTech(tech)}
               onMouseLeave={() => setHoveredTech(null)}
+              onClick={() => {
+                if (hoveredTech && hoveredTech.id === tech.id) {
+                  setHoveredTech(null);
+                } else {
+                  setHoveredTech(tech);
+                }
+              }}
             >
               {tech.label}
             </TechChip>
@@ -63,7 +70,7 @@ export default function About() {
             gridTemplateColumns: '1fr',
             gap: '2.5rem',
             alignItems: 'start',
-            padding: '2rem',
+            padding: 'var(--window-padding)',
           }} className="md-grid-2col">
             
             {/* Left Column: Personal Narrative */}
@@ -230,7 +237,7 @@ export default function About() {
                         padding: '0.5rem 0.5rem',
                       }}
                     >
-                      Hover over any skill chip to see connected portfolio projects.
+                      Hover or tap any skill chip to see connected portfolio projects.
                     </motion.div>
                   )}
                 </AnimatePresence>

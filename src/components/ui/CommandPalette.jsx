@@ -29,8 +29,16 @@ const ICON_MAP = {
 export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const inputRef = useRef(null);
   const listRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -99,6 +107,16 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
     }
   }, [selectedIndex]);
 
+  const sheetVariants = isMobile ? {
+    hidden: { y: '100%' },
+    visible: { y: 0 },
+    exit: { y: '100%' }
+  } : {
+    hidden: { scale: 0.96, y: -20 },
+    visible: { scale: 1, y: 0 },
+    exit: { scale: 0.96, y: -20 }
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -111,10 +129,11 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
           onClick={onClose}
         >
           <motion.div
-            initial={{ scale: 0.96, y: -20 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.96, y: -20 }}
-            transition={{ type: 'spring', duration: 0.45, bounce: 0.1 }}
+            variants={sheetVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={isMobile ? { type: 'spring', damping: 25, stiffness: 220 } : { type: 'spring', duration: 0.45, bounce: 0.1 }}
             onClick={(e) => e.stopPropagation()}
             style={{
               width: '100%',
@@ -124,13 +143,13 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
               boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
               border: '1px solid var(--border-bright)',
             }}
-            className="glass-bright"
+            className="glass-bright command-palette-sheet"
           >
             {/* Search Input Container */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              padding: '1.25rem 1.5rem',
+              padding: isMobile ? '1rem' : '1.25rem 1.5rem',
               borderBottom: '1px solid var(--border)',
               gap: '0.85rem'
             }}>
@@ -154,25 +173,28 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                   color: 'var(--text-primary)',
                 }}
               />
-              <span style={{
-                fontSize: '0.72rem',
-                color: 'var(--text-tertiary)',
-                background: 'rgba(255,255,255,0.06)',
-                padding: '0.25rem 0.5rem',
-                borderRadius: '6px',
-                border: '1px solid var(--border)'
-              }}>
-                ESC
-              </span>
+              {!isMobile && (
+                <span style={{
+                  fontSize: '0.72rem',
+                  color: 'var(--text-tertiary)',
+                  background: 'rgba(255,255,255,0.06)',
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border)'
+                }}>
+                  ESC
+                </span>
+              )}
             </div>
 
             {/* Actions List */}
             <div 
               ref={listRef}
               style={{
-                maxHeight: '340px',
+                maxHeight: isMobile ? '50vh' : '340px',
                 overflowY: 'auto',
-                padding: '0.5rem'
+                padding: '0.5rem',
+                paddingBottom: isMobile ? 'calc(1.5rem + env(safe-area-inset-bottom, 0px))' : '0.5rem',
               }}
             >
               {filteredActions.length > 0 ? (
@@ -183,12 +205,16 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                     <div
                       key={action.id}
                       onClick={() => handleAction(action)}
-                      onMouseEnter={() => setSelectedIndex(index)}
+                      onMouseEnter={() => {
+                        if (!isMobile) {
+                          setSelectedIndex(index);
+                        }
+                      }}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        padding: '0.8rem 1rem',
+                        padding: isMobile ? '0.95rem 1rem' : '0.8rem 1rem',
                         borderRadius: '10px',
                         cursor: 'pointer',
                         background: isSelected ? 'rgba(255,255,255,0.08)' : 'transparent',
@@ -213,7 +239,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                           <div style={{
                             fontSize: '0.875rem',
                             fontWeight: 500,
-                            color: isSelected ? 'var(--text-primary)' : 'var(--text-primary)',
+                            color: 'var(--text-primary)',
                           }}>
                             {action.label}
                           </div>
@@ -226,7 +252,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                         </div>
                       </div>
 
-                      {isSelected && (
+                      {isSelected && !isMobile && (
                         <motion.span 
                           initial={{ opacity: 0, x: -5 }}
                           animate={{ opacity: 1, x: 0 }}

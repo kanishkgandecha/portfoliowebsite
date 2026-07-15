@@ -322,6 +322,14 @@ function TabInspector({ projectId, tabName, accentColor }) {
 
 export default function Modal({ project, isOpen, onClose }) {
   const [activeTab, setActiveTab] = useState('Preview');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Prevent background scroll when modal is open
   useEffect(() => {
@@ -343,19 +351,19 @@ export default function Modal({ project, isOpen, onClose }) {
     ? ['Preview', 'Architecture', 'Viewer', 'API', 'Setup']
     : ['Preview', 'Architecture', 'API', 'Setup'];
 
+  const sheetVariants = isMobile ? {
+    hidden: { y: '100%', opacity: 1 },
+    visible: { y: 0, opacity: 1 },
+    exit: { y: '100%', opacity: 1 }
+  } : {
+    hidden: { opacity: 0, scale: 0.95, y: 15 },
+    visible: { opacity: 1, scale: 1, y: 0 },
+    exit: { opacity: 0, scale: 0.95, y: 15 }
+  };
+
   return (
     <AnimatePresence>
-      <div 
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 500,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '1.5rem',
-        }}
-      >
+      <div className="modal-overlay-container">
         {/* Backdrop overlay */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -373,11 +381,12 @@ export default function Modal({ project, isOpen, onClose }) {
 
         {/* Modal Window Container */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          transition={{ type: 'spring', duration: 0.5 }}
-          className="glass-bright"
+          variants={sheetVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={isMobile ? { type: 'spring', damping: 26, stiffness: 210 } : { type: 'spring', duration: 0.5 }}
+          className="glass-bright project-modal-sheet"
           style={{
             position: 'relative',
             zIndex: 10,
@@ -394,7 +403,7 @@ export default function Modal({ project, isOpen, onClose }) {
         >
           {/* Header */}
           <div style={{
-            padding: '1.25rem 2rem',
+            padding: isMobile ? '1rem 1.25rem' : '1.25rem 2rem',
             borderBottom: '1px solid var(--border)',
             display: 'flex',
             alignItems: 'center',
@@ -422,7 +431,7 @@ export default function Modal({ project, isOpen, onClose }) {
                 {project.title}
               </h2>
             </div>
-            <Button variant="icon" onClick={onClose} aria-label="Close modal">
+            <Button variant="icon" onClick={onClose} aria-label="Close modal" style={{ width: '36px', height: '36px' }}>
               <X size={18} />
             </Button>
           </div>
@@ -432,7 +441,7 @@ export default function Modal({ project, isOpen, onClose }) {
             className="modal-scroll"
             style={{
               flex: 1,
-              padding: '2rem 2.25rem',
+              padding: 'var(--window-padding)',
               overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column',

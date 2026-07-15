@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Menu, X, Command, Sun, Moon } from 'lucide-react';
+import { Command, Sun, Moon, Home, Folder, Briefcase, User, Mail } from 'lucide-react';
 
 const Github = ({ size = 16, strokeWidth = 1.75 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
@@ -28,10 +28,17 @@ const NAV_LINKS = [
   { id: 'contact', label: 'Contact' },
 ];
 
+const MOBILE_NAV_LINKS = [
+  { id: 'home', label: 'Overview', icon: Home },
+  { id: 'projects', label: 'Projects', icon: Folder },
+  { id: 'experience', label: 'Experience', icon: Briefcase },
+  { id: 'about', label: 'Skills', icon: User },
+  { id: 'contact', label: 'Contact', icon: Mail },
+];
+
 export default function FloatingNav({ activeSection, scrollToSection, onOpenPalette }) {
   const scrollDirection = useScrollDirection();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('appearance-theme');
@@ -64,24 +71,22 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
 
   const handleNavClick = (id) => {
     scrollToSection(id);
-    setMobileMenuOpen(false);
   };
-
-  const isNavHidden = scrollDirection === 'down' && scrolled;
 
   console.log("Navbar render. activeSection prop value is:", activeSection);
 
   return (
     <>
-      {/* Universal Floating Navigation Capsule */}
+      {/* ── Desktop Navigation (Top Bar) ── */}
       <motion.nav
         initial={{ y: -100, x: '-50%' }}
         animate={{ 
-          y: 0, // Always visible, do not hide on scroll down
+          y: 0,
           x: '-50%',
           scale: scrolled ? 0.97 : 1,
         }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
+        className="hidden-mobile"
         style={{
           position: 'fixed',
           top: '1.25rem',
@@ -107,7 +112,7 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             borderRadius: '100px',
           }}
         >
-          {/* Cursive Logo / Home link */}
+          {/* Cursive Logo */}
           <button 
             onClick={() => handleNavClick('home')}
             style={{
@@ -127,9 +132,10 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             Kanishk
           </button>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden-mobile" style={{ alignItems: 'center', gap: '0.35rem' }}>
-            <div style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 0.5rem' }} />
+          <div style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 0.5rem' }} />
+
+          {/* Nav Links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
             {NAV_LINKS.map((link) => {
               const isActive = activeSection === link.id;
               return (
@@ -156,8 +162,8 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
 
           <div style={{ width: '1px', height: '16px', background: 'var(--border)' }} />
 
-          {/* Desktop Actions / Socials */}
-          <div className="hidden-mobile" style={{ alignItems: 'center', gap: '0.4rem' }}>
+          {/* Actions / Socials */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <a 
               href={PERSONAL.github} 
               target="_blank" 
@@ -181,9 +187,8 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             <div style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 0.25rem' }} />
           </div>
 
-          {/* Shared Action Elements */}
+          {/* Search commands & theme toggle */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            {/* Command Palette Trigger */}
             <button
               onClick={onOpenPalette}
               className="btn-ghost"
@@ -201,7 +206,6 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
               <span>K</span>
             </button>
 
-            {/* Theme Toggler */}
             <button
               onClick={toggleTheme}
               className="btn-ghost"
@@ -218,109 +222,130 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             >
               {theme === 'light' ? <Moon size={13} strokeWidth={1.75} /> : <Sun size={13} strokeWidth={1.75} />}
             </button>
-
-            {/* Mobile Menu Toggle Button */}
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="btn-ghost mobile-only-btn"
-              style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '50%',
-                padding: '0',
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              title="Menu"
-            >
-              <Menu size={13} strokeWidth={1.75} />
-            </button>
           </div>
         </motion.div>
       </motion.nav>
 
-      {/* Mobile Drawer Overlay Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0, 0, 0, 0.6)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              zIndex: 500,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <button 
-              onClick={() => setMobileMenuOpen(false)}
-              className="btn-icon"
-              style={{ position: 'absolute', top: '2rem', right: '2rem' }}
-            >
-              <X size={18} strokeWidth={1.75} />
-            </button>
-
-            <div 
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.5rem',
-                alignItems: 'center',
-                width: '100%',
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {NAV_LINKS.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => handleNavClick(link.id)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '1.1rem',
-                    fontWeight: activeSection === link.id ? 600 : 450,
-                    color: activeSection === link.id ? 'var(--accent)' : 'var(--text-secondary)',
-                    transition: 'color 0.2s ease',
-                  }}
-                >
-                  {link.label}
-                </button>
-              ))}
-
-              <div style={{ width: '60px', height: '1px', background: 'var(--border)', margin: '0.75rem 0' }} />
-
-              <a 
-                href={PERSONAL.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost"
-                style={{ width: '200px', justifyContent: 'center', borderRadius: '12px', padding: '0.75rem' }}
+      {/* ── Mobile Navigation (Bottom Capsule Tab Bar) ── */}
+      <div 
+        className="mobile-bottom-nav-container"
+        style={{
+          position: 'fixed',
+          bottom: '1rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 'calc(100% - 2rem)',
+          maxWidth: '480px',
+          zIndex: 400,
+        }}
+      >
+        <div 
+          className="glass-bright"
+          style={{
+            display: 'flex',
+            width: '100%',
+            borderRadius: '20px',
+            padding: '0.45rem',
+            paddingBottom: 'calc(0.45rem + env(safe-area-inset-bottom, 0px))',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            boxShadow: 'var(--shadow-lg)',
+          }}
+        >
+          {MOBILE_NAV_LINKS.map((link) => {
+            const Icon = link.icon;
+            const isActive = activeSection === link.id;
+            return (
+              <button
+                key={link.id}
+                onClick={() => handleNavClick(link.id)}
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '3px',
+                  height: '44px',
+                  background: isActive ? 'var(--bg-surface-2)' : 'transparent',
+                  border: 'none',
+                  borderRadius: '12px',
+                  color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease, color 0.2s ease',
+                  padding: '4px 0',
+                }}
               >
-                <FileText size={14} strokeWidth={1.75} /> Download Resume
-              </a>
+                <Icon size={16} strokeWidth={isActive ? 2.25 : 1.75} />
+                <span style={{ fontSize: '0.62rem', fontWeight: isActive ? 600 : 500 }}>{link.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-              <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.5rem' }}>
-                <a href={PERSONAL.github} target="_blank" rel="noopener noreferrer" className="btn-icon">
-                  <Github size={16} />
-                </a>
-                <a href={PERSONAL.linkedin} target="_blank" rel="noopener noreferrer" className="btn-icon">
-                  <Linkedin size={16} />
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* ── Mobile Action Triggers (FABs) ── */}
+      {/* Theme Toggle (Bottom-Left FAB) */}
+      <div 
+        className="mobile-bottom-nav-container"
+        style={{
+          position: 'fixed',
+          bottom: 'calc(5.75rem + env(safe-area-inset-bottom, 0px))',
+          left: '1.25rem',
+          zIndex: 400,
+        }}
+      >
+        <button
+          onClick={toggleTheme}
+          className="glass-bright"
+          style={{
+            width: '44px',
+            height: '44px',
+            borderRadius: '50%',
+            border: '1px solid var(--border-bright)',
+            boxShadow: 'var(--shadow-md)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--text-primary)',
+            cursor: 'pointer',
+            padding: 0,
+          }}
+        >
+          {theme === 'light' ? <Moon size={16} strokeWidth={1.75} /> : <Sun size={16} strokeWidth={1.75} />}
+        </button>
+      </div>
+
+      {/* Command Palette Trigger (Bottom-Right FAB) */}
+      <div 
+        className="mobile-bottom-nav-container"
+        style={{
+          position: 'fixed',
+          bottom: 'calc(5.75rem + env(safe-area-inset-bottom, 0px))',
+          right: '1.25rem',
+          zIndex: 400,
+        }}
+      >
+        <button
+          onClick={onOpenPalette}
+          className="glass-bright"
+          style={{
+            width: '44px',
+            height: '44px',
+            borderRadius: '50%',
+            border: '1px solid var(--border-bright)',
+            boxShadow: 'var(--shadow-md)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--text-primary)',
+            cursor: 'pointer',
+            padding: 0,
+          }}
+        >
+          <Command size={16} strokeWidth={1.75} />
+        </button>
+      </div>
     </>
   );
 }
