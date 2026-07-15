@@ -1,47 +1,80 @@
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Layout & Core UI
 import Navbar from './components/layout/Navbar';
-import Hero from './components/sections/Hero';
-import About from './components/sections/About';
-import Skills from './components/sections/Skills';
-import Projects from './components/sections/Projects';
-import Certifications from './components/sections/Certifications';
-import Contact from './components/sections/Contact';
 import Footer from './components/layout/Footer';
+import CommandPalette from './components/ui/CommandPalette';
+
+// Sections
+import Hero from './components/sections/Hero';
+import Projects from './components/sections/Projects';
+import Experience from './components/sections/Experience';
+import About from './components/sections/About';
+import Contact from './components/sections/Contact';
+
+// Hooks
+import { useActiveSection } from './hooks/useActiveSection';
+
+const SECTION_IDS = ['home', 'projects', 'experience', 'about', 'contact'];
 
 export default function App() {
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const { activeSection, scrollToSection } = useActiveSection(SECTION_IDS);
+
+  // Monitor global hotkeys (Cmd+K / Ctrl+K to toggle search palette)
   useEffect(() => {
-    // Keep internal smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
+        setPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   return (
-    <>
-      {/* Subtle Animated Background Layer */}
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-        <div className="bg-glow-blob bg-glow-1" style={{ top: '-10vh', left: '-10vw' }}></div>
-        <div className="bg-glow-blob bg-glow-2" style={{ bottom: '-10vh', right: '-10vw' }}></div>
-      </div>
+    <div style={{ 
+      background: 'var(--bg-primary)', 
+      minHeight: '100vh',
+      color: 'var(--text-primary)',
+      position: 'relative'
+    }}>
+      {/* Floating capsule navigation bar */}
+      <Navbar 
+        activeSection={activeSection} 
+        scrollToSection={scrollToSection}
+        onOpenPalette={() => setPaletteOpen(true)}
+      />
 
-      <div className="min-h-screen relative z-10">
-        <Navbar />
-        <main>
-          <Hero />
-          <About />
-          <Skills />
-          <Projects />
-          <Certifications />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
-    </>
+      {/* Universal Search Command Palette */}
+      <CommandPalette 
+        isOpen={paletteOpen} 
+        onClose={() => setPaletteOpen(false)}
+        scrollToSection={scrollToSection}
+      />
+
+      {/* Core layout sections */}
+      <main>
+        {/* Hero Experience */}
+        <Hero />
+
+        {/* Shipped Products showcase */}
+        <Projects />
+
+        {/* Experience & Timeline logs */}
+        <Experience />
+
+        {/* Skills Constellation & Journey */}
+        <About />
+
+        {/* Communication Desk panel */}
+        <Contact />
+      </main>
+
+      {/* Credits & copyright */}
+      <Footer />
+    </div>
   );
 }
