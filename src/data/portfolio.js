@@ -1,30 +1,84 @@
 // ============================================================
 // PORTFOLIO — Single Source of Truth
-// Apple-philosophy design — v3.0.0
+// Software Engineer Portfolio — v3.0.0
 // ============================================================
 
 export const PERSONAL = {
   name: 'Kanishk Gandecha',
   firstName: 'Kanishk',
-  title: 'Full Stack Developer',
-  headline: 'Building software that solves real-world problems.',
+  title: 'Software Engineer',
+  headline: 'Building scalable full-stack applications, AI systems & medical visualization tools.',
   shortBio:
-    'I am a Computer Engineering student at K.J. Somaiya COE, Mumbai, passionate about building scalable full-stack products and integrating intelligent systems that make a meaningful difference.',
-  roles: ['Full Stack Developer', 'MERN Stack Engineer', 'Software Engineering Intern'],
+    'Computer Engineering student passionate about building scalable full-stack applications, AI-powered solutions, and high-performance browser-based visualization systems. Experienced in modern web technologies including React, TypeScript, Node.js, VTK.js, and REST APIs.',
+  roles: ['Full Stack Developer', 'Software Engineer', 'Frontend & Visualization Engineer'],
   email: 'gandechakanishk9@gmail.com',
-  phone: '+91-9561500052',
+  phone: '+91 95615 00052',
   location: 'Mumbai, India',
   github: 'https://github.com/kanishkgandecha',
   linkedin: 'https://www.linkedin.com/in/kanishk-gandecha/',
-  resume: 'https://drive.google.com/file/d/1pcbhkZWd2hu5kP6HAa2PONVxAoIB15GD/view?usp=sharing',
-  cgpa: '9.13',
+  resume: 'https://drive.google.com/file/d/1eJhVm0OvVJMIwQGzzfksa7NSs4K_wQHu/view?usp=sharing',
+  cgpa: '8.23',
   university: 'K.J. Somaiya COE',
   universityFull: 'K.J. Somaiya College of Engineering',
   degree: 'B.Tech Computer Engineering',
-  year: '2023 – 2027',
+  year: '2023 – Present',
   status: 'Available for Internships',
   availableFrom: 'Immediately',
 };
+
+// ── Internship Highlights ─────────────────────────────────────────────────────
+
+export const INTERNSHIP_HIGHLIGHTS = [
+  {
+    id: 'enterprise-web',
+    title: 'Enterprise-grade Web Development',
+    category: 'Full Stack Engineering',
+    desc: 'Building robust, production-ready web applications with clean architecture and scalable state management.',
+    icon: 'layers'
+  },
+  {
+    id: 'med-vis',
+    title: 'Medical Visualization',
+    category: 'Graphics & Rendering',
+    desc: 'Developing specialized browser-based medical rendering interfaces for complex 2D and 3D volume datasets.',
+    icon: 'eye'
+  },
+  {
+    id: 'interactive-rendering',
+    title: 'Interactive Rendering',
+    category: 'High Performance Web',
+    desc: 'Creating smooth, GPU-accelerated browser graphics and interactive rendering workflows with VTK.js.',
+    icon: 'cpu'
+  },
+  {
+    id: 'rest-api',
+    title: 'REST API Development',
+    category: 'Backend Infrastructure',
+    desc: 'Designing secure, performant RESTful microservices, endpoints, and database connection pipelines.',
+    icon: 'server'
+  },
+  {
+    id: 'perf-opt',
+    title: 'Performance Optimization',
+    category: 'System Performance',
+    desc: 'Minimizing render cycles, optimizing client bundles, and ensuring high-frame-rate browser execution.',
+    icon: 'zap'
+  },
+  {
+    id: 'rbac',
+    title: 'Role Based Access Control',
+    category: 'Security & Access',
+    desc: 'Enforcing granular user permissions, JWT security, multi-vendor rules, and access guards.',
+    icon: 'shield'
+  },
+  {
+    id: 'production-ui',
+    title: 'Production UI Development',
+    category: 'Frontend Engineering',
+    desc: 'Crafting responsive, accessible, Apple-caliber user interfaces focused on usability and precision.',
+    icon: 'layout'
+  }
+];
 
 // ── Projects ──────────────────────────────────────────────────────────────────
 
@@ -32,19 +86,19 @@ export const PROJECTS = [
   {
     id: 'medilink',
     title: 'MediLink',
-    subtitle: 'Healthcare Management Platform',
-    category: 'Healthcare · AI',
+    subtitle: 'AI-Powered Health Management',
+    category: 'MERN · AI · Healthcare',
     year: '2025',
     duration: '4 months',
     status: 'Completed',
     featured: true,
     accentColor: '#30D158', // Apple green
-    tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Gemini AI'],
+    tags: ['React', 'Node.js', 'Express', 'MongoDB', 'AI'],
     tagCategory: ['fullstack', 'ai'],
     github: 'https://github.com/kanishkgandecha',
     demo: null,
     // Short card content
-    description: 'Full-stack MERN healthcare system with an AI chatbot, real-time health analytics, doctor directory, and comprehensive patient management.',
+    description: 'AI-powered healthcare management platform featuring report analysis, chatbot assistance, and health tracking.',
     // Modal-only content
     problem: 'Healthcare data is fragmented across disconnected systems. Patients lack AI-driven insights into their health patterns, and doctors struggle with incomplete patient histories.',
     solution: 'MediLink unifies health records, AI-powered analysis via Gemini API, and doctor communication into a single cohesive platform — streamlining the entire healthcare workflow.',
@@ -57,10 +111,9 @@ export const PROJECTS = [
     ],
     highlights: [
       'AI health chatbot powered by Gemini API',
-      'Automated health report generation',
-      'Doctor directory with advanced search',
-      'Real-time dashboard analytics',
-      'Medical history tracking across visits',
+      'Automated health report analysis and tracking',
+      'Doctor directory with advanced search & scheduling',
+      'Real-time dashboard analytics and medical history',
       'Role-based access: patient, doctor, admin',
     ],
     metrics: [
@@ -68,42 +121,61 @@ export const PROJECTS = [
       { label: 'Lines of Code', value: '3,200+' },
       { label: 'Build Time', value: '4 months' },
     ],
+    modalDetails: {
+      objective: 'Build an end-to-end full-stack healthcare ecosystem incorporating intelligent AI report diagnostics and real-time medical record synchronization.',
+      architecture: [
+        'Component-driven React 18 client architecture',
+        'Node.js & Express RESTful API microservice pattern',
+        'MongoDB document schema optimized for indexing medical logs',
+        'Gemini API integration for real-time diagnostic synthesis',
+        'JWT role-based access guards protecting patient records'
+      ]
+    }
   },
   {
     id: 'electrohub',
     title: 'ElectroHub',
-    subtitle: 'E-Commerce Platform',
-    category: 'E-Commerce',
+    subtitle: 'Full-Stack E-Commerce Platform',
+    category: 'Full Stack · E-Commerce',
     year: '2024',
     duration: '3 months',
     status: 'Completed',
     featured: true,
     accentColor: '#FF9F0A', // Apple orange
-    tags: ['PHP', 'MySQL', 'Bootstrap', 'JavaScript'],
+    tags: ['React', 'Node.js', 'Express', 'MySQL'],
     tagCategory: ['fullstack'],
     github: 'https://github.com/kanishkgandecha',
     demo: null,
-    description: 'Full-featured electronics e-commerce platform with product catalog, shopping cart, user authentication, and a complete admin dashboard.',
-    problem: 'Small electronics retailers needed an affordable, manageable online store without enterprise complexity and cost.',
-    solution: 'ElectroHub delivers a complete commerce workflow — catalog management, cart, orders, and admin — built for simplicity and reliability.',
+    description: 'Full-stack e-commerce platform with authentication, cart, checkout, and admin dashboard.',
+    problem: 'Retail operations require smooth transaction workflows, inventory management, and role-restricted admin access.',
+    solution: 'ElectroHub delivers a complete commerce workflow — catalog management, cart persistence, orders, and admin controls.',
     architecture: [
-      { layer: 'Frontend', detail: 'HTML/CSS/JS with Bootstrap 5' },
-      { layer: 'Backend', detail: 'PHP with MVC-inspired structure' },
+      { layer: 'Frontend', detail: 'React with responsive component UI' },
+      { layer: 'Backend', detail: 'Node.js & Express REST API' },
       { layer: 'Database', detail: 'MySQL with normalized schema' },
+      { layer: 'Auth', detail: 'Session & JWT user authentication' },
     ],
     highlights: [
-      'Product catalog managing 100+ items',
-      'Shopping cart with session persistence',
-      'Full user authentication system',
-      'Admin dashboard with CRUD operations',
-      'Order management and tracking',
-      'Category-based search and filtering',
+      'Product catalog managing 100+ items with instant filtering',
+      'Shopping cart with persistence and order calculation',
+      'Full user authentication & session management system',
+      'Admin dashboard with full CRUD operations for product inventory',
+      'Order management and fulfillment tracking',
     ],
     metrics: [
       { label: 'Products', value: '100+' },
       { label: 'Pages', value: '15+' },
       { label: 'Build Time', value: '3 months' },
     ],
+    modalDetails: {
+      objective: 'Engineered a full-stack electronics e-commerce suite featuring complete order workflows, relational database management, and administrative inventory controls.',
+      architecture: [
+        'React frontend interface with reactive cart management',
+        'Express REST backend serving transactional endpoints',
+        'MySQL relational schema with ACID compliant transaction handling',
+        'Role-Based Access Control protecting admin inventory functions'
+      ]
+    }
   },
   {
     id: 'ai-resume',
@@ -119,27 +191,33 @@ export const PROJECTS = [
     tagCategory: ['ai', 'frontend'],
     github: 'https://github.com/kanishkgandecha',
     demo: null,
-    description: 'Resume scoring and feedback tool that provides instant, actionable analysis based on ATS-friendly metrics, keyword density, and formatting.',
+    description: 'AI-based resume scoring platform with visual analytics and intelligent feedback.',
     problem: 'Job seekers blindly submit resumes without knowing whether they will pass ATS filters, leading to missed opportunities.',
-    solution: 'An instant analysis tool that scores resumes across 8 categories and provides specific, actionable improvement suggestions.',
+    solution: 'An instant analysis tool that scores resumes across key categories and provides specific, actionable feedback.',
     architecture: [
-      { layer: 'Frontend', detail: 'React with Tailwind CSS' },
-      { layer: 'Analysis Engine', detail: 'Client-side AI scoring logic' },
+      { layer: 'Frontend', detail: 'React with Tailwind CSS UI' },
+      { layer: 'Analysis Engine', detail: 'AI scoring algorithms & keyword engine' },
       { layer: 'Reporting', detail: 'Visual dashboard with chart components' },
     ],
     highlights: [
       'ATS compatibility score calculation',
-      'Keyword density analysis',
-      'Section completeness checker',
+      'Keyword density and section completeness analysis',
       'Visual score breakdown dashboard',
-      'Specific improvement suggestions',
-      '8 scoring categories',
+      'Specific, actionable feedback generation',
     ],
     metrics: [
       { label: 'Categories', value: '8' },
       { label: 'Feedback', value: 'Instant' },
       { label: 'Accuracy', value: 'ATS-aligned' },
     ],
+    modalDetails: {
+      objective: 'Provide job seekers with automated, intelligent ATS feedback and visual analytics on resume formatting and keyword density.',
+      architecture: [
+        'React SPA with Tailwind CSS design system',
+        'Intelligent text parsing and scoring algorithms',
+        'Visual chart analytics breakdown for user insights'
+      ]
+    }
   },
   {
     id: 'weather',
@@ -155,59 +233,32 @@ export const PROJECTS = [
     tagCategory: ['frontend'],
     github: 'https://github.com/kanishkgandecha',
     demo: null,
-    description: 'Clean weather application with real-time city search, 5-day forecasting, and live meteorological metrics.',
-    problem: 'Existing weather apps are overloaded with ads and irrelevant data. A focused, clean alternative was needed.',
-    solution: 'A minimal dashboard that surfaces exactly what matters: current conditions and a 5-day forecast — presented clearly.',
+    description: 'Real-time weather application using OpenWeather API.',
+    problem: 'Users need a lightweight, accurate weather tool free of ad clutter and unnecessary friction.',
+    solution: 'A minimal dashboard that surfaces real-time conditions and 5-day forecasts with precision.',
     architecture: [
-      { layer: 'Frontend', detail: 'Vanilla JS with CSS Grid layout' },
+      { layer: 'Frontend', detail: 'Vanilla JS with responsive CSS Grid' },
       { layer: 'API', detail: 'OpenWeather REST API' },
     ],
     highlights: [
-      'Real-time city search with autocomplete',
-      '5-day weather forecast',
-      'Temperature, humidity, wind speed display',
-      'Dynamic weather icon system',
-      'Responsive grid layout',
+      'Real-time city search with dynamic API data fetching',
+      '5-day weather forecast breakdown',
+      'Temperature, humidity, and wind metric displays',
+      'Dynamic weather icon status engine',
     ],
     metrics: [
       { label: 'Coverage', value: 'Global' },
       { label: 'Forecast', value: '5 days' },
       { label: 'Refresh', value: 'Real-time' },
     ],
-  },
-  {
-    id: 'agri',
-    title: 'Agriculture Wholesale',
-    subtitle: 'Farmer-to-Buyer Marketplace',
-    category: 'AgriTech · UI',
-    year: '2024',
-    duration: '1 month',
-    status: 'Prototype',
-    featured: false,
-    accentColor: '#30D158', // Apple green
-    tags: ['HTML', 'CSS', 'JavaScript', 'Bootstrap'],
-    tagCategory: ['frontend', 'fullstack'],
-    github: 'https://github.com/kanishkgandecha',
-    demo: null,
-    description: 'Scalable vendor-based platform prototype connecting farmers directly to bulk buyers, eliminating middlemen.',
-    problem: 'Agricultural middlemen inflate prices and significantly reduce farmer profit margins on wholesale transactions.',
-    solution: 'A direct marketplace prototype demonstrating a farmer-to-buyer wholesale platform with vendor profiles and bulk ordering.',
-    architecture: [
-      { layer: 'Frontend', detail: 'HTML/CSS/JS with Bootstrap' },
-      { layer: 'Data', detail: 'Mock data layer for prototype' },
-    ],
-    highlights: [
-      'Vendor profile management',
-      'Product listing with categories',
-      'Bulk order request forms',
-      'Category-based browsing',
-      'B2B transaction flow',
-    ],
-    metrics: [
-      { label: 'Model', value: 'B2B' },
-      { label: 'Scope', value: 'State-level' },
-      { label: 'Type', value: 'Marketplace' },
-    ],
+    modalDetails: {
+      objective: 'Deliver an efficient, real-time meteorological dashboard utilizing external RESTful weather APIs.',
+      architecture: [
+        'Pure JavaScript client fetching live meteorological data',
+        'Asynchronous OpenWeather REST API handling',
+        'Responsive CSS Grid interface for cross-device usability'
+      ]
+    }
   },
 ];
 
@@ -215,20 +266,38 @@ export const PROJECTS = [
 
 export const EXPERIENCE = [
   {
-    id: 'current-internship',
+    id: 'medmarvel',
     role: 'Software Development Intern',
-    company: 'Currently Seeking',
-    companyShort: 'Open to Opportunities',
-    period: 'Immediately Available',
+    company: 'MedMarvel Software Solutions Pvt Ltd',
+    companyShort: 'MedMarvel',
+    period: 'June 2026 – July 2026',
     type: 'internship',
     current: true,
-    description: 'Actively seeking a software engineering internship where I can contribute to a team, ship real products, and grow as a developer.',
+    description: 'Engineered scalable frontend components, backend services, and browser-based medical visualization modules with interactive rendering workflows.',
     responsibilities: [
-      'Open to full-stack, backend, or frontend roles',
-      'Comfortable with MERN stack and Python environments',
-      'Available for full-time internship immediately',
+      'Built scalable frontend components using React.js and TypeScript',
+      'Developed backend microservices and REST APIs using Node.js and Express.js',
+      'Engineered browser-based medical visualization modules and interactive rendering workflows using VTK.js',
+      'Implemented Role-Based Access Control (RBAC) and performance optimization strategies for high-frequency client interaction',
+      'Utilized standard Git workflows for version control, code reviews, and team collaboration'
     ],
-    tech: ['React', 'Node.js', 'MongoDB', 'Express', 'Python'],
+    tech: ['React.js', 'TypeScript', 'Node.js', 'Express.js', 'REST APIs', 'RBAC', 'VTK.js', 'Medical Visualization', 'Performance Optimization', 'Git'],
+  },
+  {
+    id: 'billing-internship',
+    role: 'Software Development Intern',
+    company: 'Software Development Intern',
+    companyShort: 'Billing & Invoice System',
+    period: 'December 2025',
+    type: 'internship',
+    current: false,
+    description: 'Digitized manual invoicing processes by architecting a full-stack Billing & Invoice Management System featuring multi-vendor workflows.',
+    responsibilities: [
+      'Architected a multi-vendor workflow system that digitized manual invoicing operations',
+      'Built interactive React frontend interfaces and robust Node.js backend APIs',
+      'Designed normalized relational database schemas and enforced fine-grained Role-Based Access Control (RBAC)'
+    ],
+    tech: ['React.js', 'Node.js', 'REST APIs', 'Database Schema', 'RBAC'],
   },
 ];
 
@@ -238,16 +307,16 @@ export const EDUCATION = [
     degree: 'B.Tech Computer Engineering',
     institution: 'K.J. Somaiya College of Engineering',
     location: 'Mumbai, India',
-    period: '2023 – 2027',
-    score: 'CGPA 9.13 / 10',
+    period: '2023 – Present',
+    score: 'CGPA 8.23',
     current: true,
     highlights: [
       'Data Structures & Algorithms',
-      'Database Management Systems',
       'Object-Oriented Programming',
+      'Database Management Systems',
+      'Role Based Access Control',
       'Computer Networks',
       'Operating Systems',
-      'Machine Learning Fundamentals',
     ],
   },
   {
@@ -293,32 +362,47 @@ export const CERTIFICATIONS = [
 
 export const TECH_STACK = [
   // Frontend
-  { id: 'react', label: 'React', category: 'frontend', projects: ['medilink', 'ai-resume'] },
-  { id: 'js', label: 'JavaScript', category: 'frontend', projects: ['medilink', 'weather', 'ai-resume', 'electrohub', 'agri'] },
-  { id: 'html', label: 'HTML', category: 'frontend', projects: ['electrohub', 'weather', 'agri'] },
-  { id: 'css', label: 'CSS', category: 'frontend', projects: ['electrohub', 'weather', 'agri'] },
-  { id: 'tailwind', label: 'Tailwind', category: 'frontend', projects: ['medilink', 'ai-resume'] },
+  { id: 'react', label: 'React.js', category: 'frontend', projects: ['medilink', 'electrohub', 'ai-resume'] },
+  { id: 'js-fe', label: 'JavaScript', category: 'frontend', projects: ['medilink', 'weather', 'ai-resume', 'electrohub'] },
+  { id: 'html', label: 'HTML', category: 'frontend', projects: ['electrohub', 'weather'] },
+  { id: 'css', label: 'CSS', category: 'frontend', projects: ['electrohub', 'weather'] },
+  
   // Backend
-  { id: 'nodejs', label: 'Node.js', category: 'backend', projects: ['medilink'] },
-  { id: 'express', label: 'Express', category: 'backend', projects: ['medilink'] },
-  { id: 'php', label: 'PHP', category: 'backend', projects: ['electrohub'] },
-  { id: 'restapi', label: 'REST APIs', category: 'backend', projects: ['medilink', 'weather'] },
-  // Database
-  { id: 'mongodb', label: 'MongoDB', category: 'database', projects: ['medilink'] },
-  { id: 'mysql', label: 'MySQL', category: 'database', projects: ['electrohub'] },
-  // AI / ML
-  { id: 'python', label: 'Python', category: 'ai', projects: ['ai-resume'] },
-  { id: 'ai', label: 'Gemini AI', category: 'ai', projects: ['medilink', 'ai-resume'] },
+  { id: 'nodejs', label: 'Node.js', category: 'backend', projects: ['medilink', 'electrohub'] },
+  { id: 'express', label: 'Express.js', category: 'backend', projects: ['medilink', 'electrohub'] },
+  { id: 'restapi', label: 'REST APIs', category: 'backend', projects: ['medilink', 'electrohub', 'weather'] },
+  
+  // Languages
+  { id: 'javascript', label: 'JavaScript', category: 'languages', projects: ['medilink', 'electrohub', 'ai-resume', 'weather'] },
+  { id: 'php', label: 'PHP', category: 'languages', projects: [] },
+  
+  // Databases
+  { id: 'mongodb', label: 'MongoDB', category: 'databases', projects: ['medilink'] },
+  { id: 'mysql', label: 'MySQL', category: 'databases', projects: ['electrohub'] },
+  
+  // Visualization
+  { id: 'vtkjs', label: 'VTK.js', category: 'visualization', projects: ['medilink'] },
+  { id: 'interactive-rendering', label: 'Interactive Rendering', category: 'visualization', projects: ['medilink'] },
+  { id: 'med-vis', label: 'Medical Visualization', category: 'visualization', projects: ['medilink'] },
+  
+  // Concepts
+  { id: 'dsa', label: 'DSA', category: 'concepts', projects: [] },
+  { id: 'oop', label: 'OOP', category: 'concepts', projects: [] },
+  { id: 'dbms', label: 'DBMS', category: 'concepts', projects: ['medilink', 'electrohub'] },
+  { id: 'rbac', label: 'RBAC', category: 'concepts', projects: ['medilink', 'electrohub'] },
+  
   // Tools
-  { id: 'git', label: 'Git', category: 'tools', projects: ['medilink', 'electrohub', 'ai-resume', 'weather', 'agri'] },
-  { id: 'github', label: 'GitHub', category: 'tools', projects: ['medilink', 'electrohub', 'ai-resume', 'weather', 'agri'] },
+  { id: 'git', label: 'Git', category: 'tools', projects: ['medilink', 'electrohub', 'ai-resume', 'weather'] },
+  { id: 'github', label: 'GitHub', category: 'tools', projects: ['medilink', 'electrohub', 'ai-resume', 'weather'] },
 ];
 
 export const TECH_CATEGORIES = {
   frontend: { label: 'Frontend' },
   backend: { label: 'Backend' },
-  database: { label: 'Database' },
-  ai: { label: 'AI / ML' },
+  languages: { label: 'Languages' },
+  databases: { label: 'Databases' },
+  visualization: { label: 'Visualization' },
+  concepts: { label: 'Concepts' },
   tools: { label: 'Tools' },
 };
 
@@ -326,10 +410,10 @@ export const TECH_CATEGORIES = {
 
 export const PALETTE_ACTIONS = [
   { id: 'projects', label: 'View Projects', subtitle: 'Browse my work', section: 'projects', icon: 'folder' },
-  { id: 'experience', label: 'Experience', subtitle: 'Education & background', section: 'experience', icon: 'briefcase' },
-  { id: 'about', label: 'About & Skills', subtitle: 'Technologies & certifications', section: 'about', icon: 'user' },
-  { id: 'contact', label: 'Contact Me', subtitle: 'Let\'s work together', section: 'contact', icon: 'mail' },
-  { id: 'resume', label: 'Download Resume', subtitle: 'Open in new tab', href: null, icon: 'file-text', action: 'resume' },
+  { id: 'experience', label: 'Experience', subtitle: 'Internships & education', section: 'experience', icon: 'briefcase' },
+  { id: 'about', label: 'About & Skills', subtitle: 'Skills & certifications', section: 'about', icon: 'user' },
+  { id: 'contact', label: 'Contact Me', subtitle: 'Get in touch', section: 'contact', icon: 'mail' },
+  { id: 'resume', label: 'Download Resume', subtitle: 'Open Google Drive PDF', href: null, icon: 'file-text', action: 'resume' },
   { id: 'github', label: 'Open GitHub', subtitle: 'github.com/kanishkgandecha', href: 'https://github.com/kanishkgandecha', icon: 'github' },
   { id: 'linkedin', label: 'Open LinkedIn', subtitle: 'linkedin.com/in/kanishk-gandecha', href: 'https://www.linkedin.com/in/kanishk-gandecha/', icon: 'linkedin' },
   { id: 'email', label: 'Email Me', subtitle: 'gandechakanishk9@gmail.com', action: 'email', icon: 'mail' },

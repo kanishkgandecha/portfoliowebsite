@@ -12,48 +12,53 @@ export default function About() {
   // Group technologies by category
   const frontendTech = TECH_STACK.filter(t => t.category === 'frontend');
   const backendTech = TECH_STACK.filter(t => t.category === 'backend');
-  const databaseTech = TECH_STACK.filter(t => t.category === 'database');
-  const aiTech = TECH_STACK.filter(t => t.category === 'ai');
+  const languagesTech = TECH_STACK.filter(t => t.category === 'languages');
+  const databaseTech = TECH_STACK.filter(t => t.category === 'databases');
+  const visualizationTech = TECH_STACK.filter(t => t.category === 'visualization');
+  const conceptsTech = TECH_STACK.filter(t => t.category === 'concepts');
   const toolsTech = TECH_STACK.filter(t => t.category === 'tools');
 
-  const renderTechGroup = (label, techs) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-      <span style={{
-        fontSize: '0.68rem',
-        fontWeight: 600,
-        color: 'var(--text-tertiary)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.04em',
-      }}>
-        {label}
-      </span>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
-        {techs.map((tech) => {
-          const isHighlighted = hoveredTech && hoveredTech.id === tech.id;
-          const isDimmed = hoveredTech && hoveredTech.id !== tech.id && !hoveredTech.projects.some(p => tech.projects.includes(p));
+  const renderTechGroup = (label, techs) => {
+    if (!techs || techs.length === 0) return null;
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+        <span style={{
+          fontSize: '0.68rem',
+          fontWeight: 600,
+          color: 'var(--text-tertiary)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.04em',
+        }}>
+          {label}
+        </span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+          {techs.map((tech) => {
+            const isHighlighted = hoveredTech && hoveredTech.id === tech.id;
+            const isDimmed = hoveredTech && hoveredTech.id !== tech.id && (!hoveredTech.projects || !hoveredTech.projects.some(p => tech.projects && tech.projects.includes(p)));
 
-          return (
-            <TechChip
-              key={tech.id}
-              active={isHighlighted}
-              dimmed={isDimmed}
-              onMouseEnter={() => setHoveredTech(tech)}
-              onMouseLeave={() => setHoveredTech(null)}
-              onClick={() => {
-                if (hoveredTech && hoveredTech.id === tech.id) {
-                  setHoveredTech(null);
-                } else {
-                  setHoveredTech(tech);
-                }
-              }}
-            >
-              {tech.label}
-            </TechChip>
-          );
-        })}
+            return (
+              <TechChip
+                key={tech.id}
+                active={isHighlighted}
+                dimmed={isDimmed}
+                onMouseEnter={() => setHoveredTech(tech)}
+                onMouseLeave={() => setHoveredTech(null)}
+                onClick={() => {
+                  if (hoveredTech && hoveredTech.id === tech.id) {
+                    setHoveredTech(null);
+                  } else {
+                    setHoveredTech(tech);
+                  }
+                }}
+              >
+                {tech.label}
+              </TechChip>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <section id="about" className="section section--alt">
@@ -61,7 +66,7 @@ export default function About() {
         <SectionHeader 
           eyebrow="developer.json"
           title="About & Core Skills"
-          subtitle="A summary of my professional interests, skills, and certifications."
+          subtitle="A summary of my engineering background, core capabilities, and technical stack."
         />
 
         <AppWindow title="About — Profile Window" rightText="developer.json">
@@ -92,14 +97,14 @@ export default function About() {
                   gap: '0.5rem',
                 }}>
                   <GraduationCap size={18} strokeWidth={1.75} style={{ color: 'var(--text-secondary)' }} />
-                  <span>My Journey</span>
+                  <span>Engineering Profile</span>
                 </h3>
                 <p style={{
                   fontSize: '0.9rem',
                   color: 'var(--text-secondary)',
                   lineHeight: 1.7,
                 }}>
-                  I'm a Computer Engineering student currently pursuing my B.Tech at <strong>K.J. Somaiya College of Engineering</strong> in Mumbai. My coding journey revolves around creating performant full-stack systems and finding elegant ways to embed AI logic in everyday web tools. I thrive at the cross-section of database optimization, API design, and client-side usability.
+                  I am a Computer Engineering student at <strong>K.J. Somaiya College of Engineering</strong> in Mumbai (CGPA: <strong>8.23</strong>) with a strong interest in full-stack engineering and browser-based software architecture. My experience spans building enterprise web applications, designing REST APIs, and engineering specialized medical visualization modules using VTK.js.
                 </p>
                 <p style={{
                   fontSize: '0.9rem',
@@ -107,7 +112,7 @@ export default function About() {
                   lineHeight: 1.7,
                   marginTop: '1rem',
                 }}>
-                  I build applications prioritizing visual simplicity and structured, clean code. When I'm not studying core computer science topics like DBMS, Operating Systems, or DSA, I'm typically experimenting with modern server models, refining UI states, or shipping modular product features.
+                  I focus on performance optimization, clean UI design, and solving real-world engineering problems. Whether implementing fine-grained Role Based Access Control (RBAC), optimizing high-frequency rendering pipelines, or building AI-powered web features, I am dedicated to delivering production-grade software solutions.
                 </p>
               </div>
 
@@ -177,7 +182,7 @@ export default function About() {
                 border: '1px solid var(--border)',
                 display: 'flex', 
                 flexDirection: 'column', 
-                gap: '1.5rem' 
+                gap: '1.25rem' 
               }}>
                 <h3 style={{
                   fontFamily: 'var(--font-display)',
@@ -189,14 +194,16 @@ export default function About() {
                   gap: '0.5rem',
                 }}>
                   <Code2 size={18} strokeWidth={1.75} style={{ color: 'var(--text-secondary)' }} />
-                  <span>Ecosystem Stack</span>
+                  <span>Technical Skills</span>
                 </h3>
 
                 {renderTechGroup('Frontend', frontendTech)}
                 {renderTechGroup('Backend', backendTech)}
-                {renderTechGroup('Database', databaseTech)}
-                {renderTechGroup('AI / Machine Learning', aiTech)}
-                {renderTechGroup('Tools & Version Control', toolsTech)}
+                {renderTechGroup('Languages', languagesTech)}
+                {renderTechGroup('Databases', databaseTech)}
+                {renderTechGroup('Visualization', visualizationTech)}
+                {renderTechGroup('Concepts', conceptsTech)}
+                {renderTechGroup('Tools', toolsTech)}
               </div>
 
               {/* Subtitle Interaction Panel */}

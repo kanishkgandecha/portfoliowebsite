@@ -10,13 +10,14 @@ import CommandPalette from './components/ui/CommandPalette';
 import Hero from './components/sections/Hero';
 import Projects from './components/sections/Projects';
 import Experience from './components/sections/Experience';
+import InternshipHighlights from './components/sections/InternshipHighlights';
 import About from './components/sections/About';
 import Contact from './components/sections/Contact';
 
 // Hooks
 import { useActiveSection } from './hooks/useActiveSection';
 
-const SECTION_IDS = ['home', 'projects', 'experience', 'about', 'contact'];
+const SECTION_IDS = ['home', 'projects', 'experience', 'highlights', 'about', 'contact'];
 
 export default function App() {
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -65,6 +66,9 @@ export default function App() {
 
         {/* Experience & Timeline logs */}
         <Experience />
+
+        {/* Internship Achievement Highlights */}
+        <InternshipHighlights />
 
         {/* Skills Constellation & Journey */}
         <About />

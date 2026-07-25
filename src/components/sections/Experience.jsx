@@ -8,7 +8,7 @@ import TechChip from '../ui/TechChip';
 import AppWindow from '../ui/AppWindow';
 
 export default function Experience() {
-  const [expandedItem, setExpandedItem] = useState('current-internship');
+  const [expandedItem, setExpandedItem] = useState('medmarvel');
 
   const toggleExpand = (id) => {
     setExpandedItem(expandedItem === id ? null : id);

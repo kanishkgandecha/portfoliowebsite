@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, FileText, MapPin, Calendar, Copy, Check, ArrowRight } from 'lucide-react';
+import { Mail, FileText, MapPin, Calendar, Copy, Check, ArrowRight, Phone } from 'lucide-react';
 
 const Github = ({ size = 16 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
@@ -30,6 +30,7 @@ export default function Contact() {
 
   const contactLinks = [
     { id: 'email', label: 'Email Address', value: PERSONAL.email, href: `mailto:${PERSONAL.email}`, icon: Mail, copyable: true },
+    { id: 'phone', label: 'Phone', value: PERSONAL.phone, href: `tel:${PERSONAL.phone.replace(/\s+/g, '')}`, icon: Phone },
     { id: 'linkedin', label: 'LinkedIn', value: 'linkedin.com/in/kanishk-gandecha', href: PERSONAL.linkedin, icon: Linkedin },
     { id: 'github', label: 'GitHub', value: 'github.com/kanishkgandecha', href: PERSONAL.github, icon: Github },
     { id: 'resume', label: 'Download Resume', value: 'Google Drive PDF', href: PERSONAL.resume, icon: FileText }

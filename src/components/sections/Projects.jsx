@@ -172,7 +172,7 @@ function ArchitectureTab({ projectId }) {
       case 'medilink':
         return { client: 'React UI', api: 'REST JWT', server: 'Node / Express', db: 'MongoDB' };
       case 'electrohub':
-        return { client: 'HTML/JS', api: 'PHP Core', server: 'Apache Server', db: 'MySQL' };
+        return { client: 'React UI', api: 'REST API', server: 'Node / Express', db: 'MySQL' };
       default:
         return { client: 'Client View', api: 'API Endpoint', server: 'Worker Server', db: 'Data Model' };
     }

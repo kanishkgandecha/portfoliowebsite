@@ -33,10 +33,10 @@ export default function Hero() {
 
   // Typing simulator phrases
   const phrases = [
-    "building scalable web apps...",
-    "integrating intelligent AI...",
-    "engineering full-stack systems...",
-    "solving complex problems..."
+    "full stack development...",
+    "medical visualization (VTK.js)...",
+    "building AI-powered applications...",
+    "high performance web systems..."
   ];
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
@@ -66,12 +66,12 @@ export default function Hero() {
     return () => clearTimeout(timer);
   }, [subIndex, typing, index]);
 
-  // Clean formatted development development metadata rows
+  // Clean formatted development metadata rows
   const devMetadata = [
     { label: 'branch', val: 'main', isMono: true },
-    { label: 'stack', val: 'React · TypeScript · Node.js' },
-    { label: 'focus', val: 'Full Stack & AI' },
-    { label: 'status', val: 'Building', accent: true }
+    { label: 'stack', val: 'React · Node.js · VTK.js' },
+    { label: 'focus', val: 'Full Stack & Visualization' },
+    { label: 'status', val: 'Building Production Web Apps', accent: true }
   ];
 
   return (
