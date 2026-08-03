@@ -1,78 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, FileText } from 'lucide-react';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { ArrowRight, FileText, MapPin, Sparkles, ShieldCheck } from 'lucide-react';
 import { PERSONAL } from '../../data/portfolio';
 import Button from '../ui/Button';
-import GlassPanel from '../ui/GlassPanel';
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { type: 'spring', stiffness: 100, damping: 15 }
-  }
-};
 
 export default function Hero() {
-  const handleScroll = (id) => {
+  const cardRef = useRef(null);
+  
+  // 3D Tilt Spring Physics
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), { stiffness: 300, damping: 24 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), { stiffness: 300, damping: 24 });
+  
+  // Glare position percentage
+  const glareX = useSpring(useTransform(mouseX, [-0.5, 0.5], [0, 100]), { stiffness: 200, damping: 20 });
+  const glareY = useSpring(useTransform(mouseY, [-0.5, 0.5], [0, 100]), { stiffness: 200, damping: 20 });
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseXPos = e.clientX - rect.left;
+    const mouseYPos = e.clientY - rect.top;
+    
+    // Normalize position -0.5 to 0.5
+    const xPct = mouseXPos / width - 0.5;
+    const yPct = mouseYPos / height - 0.5;
+    
+    mouseX.set(xPct);
+    mouseY.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  const handleScrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
-
-  // Typing simulator phrases
-  const phrases = [
-    "full stack development...",
-    "medical visualization (VTK.js)...",
-    "building AI-powered applications...",
-    "high performance web systems..."
-  ];
-  const [index, setIndex] = useState(0);
-  const [subIndex, setSubIndex] = useState(0);
-  const [typing, setTyping] = useState(true);
-  const [currentText, setCurrentText] = useState('');
-
-  useEffect(() => {
-    if (subIndex === phrases[index].length + 1 && typing) {
-      setTyping(false);
-      const timeout = setTimeout(() => {
-        setSubIndex(phrases[index].length);
-      }, 2000);
-      return () => clearTimeout(timeout);
-    }
-
-    if (subIndex === 0 && !typing) {
-      setTyping(true);
-      setIndex((prev) => (prev + 1) % phrases.length);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setCurrentText(phrases[index].substring(0, subIndex));
-      setSubIndex((prev) => prev + (typing ? 1 : -1));
-    }, typing ? 60 : 30);
-
-    return () => clearTimeout(timer);
-  }, [subIndex, typing, index]);
-
-  // Clean formatted development metadata rows
-  const devMetadata = [
-    { label: 'branch', val: 'main', isMono: true },
-    { label: 'stack', val: 'React · Node.js · VTK.js' },
-    { label: 'focus', val: 'Full Stack & Visualization' },
-    { label: 'status', val: 'Building Production Web Apps', accent: true }
-  ];
 
   return (
     <section 
@@ -82,227 +52,295 @@ export default function Hero() {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        overflow: 'hidden',
+        justifyContent: 'center',
+        padding: 'calc(var(--nav-height) + 2.5rem) 1.5rem 4.5rem',
         background: 'var(--bg-primary)',
-        paddingTop: 'var(--nav-height)',
+        overflow: 'hidden',
       }}
     >
-      <style>{`
-        @keyframes blink {
-          from, to { background-color: transparent }
-          50% { background-color: var(--accent) }
-        }
-        .blinking-cursor {
-          animation: blink 1s step-end infinite;
-        }
-      `}</style>
-
-      {/* Apple-style background blur blobs */}
-      <div 
-        className="bg-blob" 
+      {/* Subtle background grid */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.12 }}
+        transition={{ duration: 1.2, delay: 0.1 }}
         style={{
-          width: '35vw',
-          height: '35vw',
-          top: '-10%',
-          right: '5%',
-          background: 'rgba(52, 199, 89, 0.06)', 
-        }}
-      />
-      <div 
-        className="bg-blob" 
-        style={{
-          width: '40vw',
-          height: '40vw',
-          bottom: '-15%',
-          left: '-10%',
-          background: 'rgba(10, 132, 255, 0.04)', 
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `radial-gradient(var(--border-bright) 1px, transparent 1px)`,
+          backgroundSize: '36px 36px',
+          pointerEvents: 'none',
         }}
       />
 
-      <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+      {/* Offset ambient glow (top-right corner, restrained opacity) */}
+      <div className="bg-blob" style={{ width: '40vw', height: '40vw', top: '-20%', right: '-15%', background: 'rgba(48, 209, 88, 0.035)' }} />
+      <div className="bg-blob" style={{ width: '45vw', height: '45vw', bottom: '-25%', left: '-20%', background: 'rgba(10, 134, 255, 0.03)' }} />
+
+      <div className="container" style={{ position: 'relative', zIndex: 10, maxWidth: '1120px' }}>
+        
+        {/* Main 2-Column Hero Layout (ID Card Prominence) */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr',
-          gap: '3rem',
+          gap: '4rem',
           alignItems: 'center',
         }} className="md-grid-hero">
           
-          {/* Left Column: Heading and Introduction */}
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+          {/* Left Column: Natural, Direct Headline & Intro */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '1.65rem' }}
             className="hero-intro"
-            style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}
           >
-            {/* Availability Badge */}
-            <motion.div variants={itemVariants}>
-              <span className="status-available">
+            {/* Status Pill */}
+            <div>
+              <span className="status-available" style={{ 
+                background: 'rgba(48, 209, 88, 0.08)', 
+                padding: '0.4rem 0.95rem', 
+                borderRadius: '100px', 
+                border: '1px solid rgba(48, 209, 88, 0.25)',
+                fontWeight: 600,
+                fontSize: '0.8rem',
+              }}>
                 {PERSONAL.status}
               </span>
-            </motion.div>
+            </div>
 
-            {/* Name & Headline */}
-            <motion.div variants={itemVariants} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <h1 style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2.5rem, 6vw, 4.25rem)',
-                fontWeight: 700,
-                lineHeight: 1.1,
-                letterSpacing: '-0.03em',
-                color: 'var(--text-primary)',
-              }}>
-                {PERSONAL.name}
-              </h1>
-              <p style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
-                fontWeight: 500,
-                letterSpacing: '-0.02em',
-                color: 'var(--text-secondary)',
-                lineHeight: 1.25,
-              }}>
-                {PERSONAL.headline}
-              </p>
-            </motion.div>
+            {/* Headline in simple, confident natural English */}
+            <h1 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2.5rem, 5vw, 3.85rem)',
+              fontWeight: 700,
+              lineHeight: 1.1,
+              letterSpacing: '-0.035em',
+              color: 'var(--text-primary)',
+            }}>
+              I build full-stack web applications, AI tools, and interactive graphics.
+            </h1>
 
-            {/* Subtitle Roles List */}
-            <motion.div 
-              variants={itemVariants} 
-              className="hero-roles"
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.5rem',
-              }}
-            >
-              {PERSONAL.roles.map((role, idx) => (
+            {/* Short, conversational bio */}
+            <p style={{
+              fontSize: '1.05rem',
+              color: 'var(--text-secondary)',
+              lineHeight: 1.65,
+              maxWidth: '500px',
+            }}>
+              Computer engineering student in Mumbai focused on clean code, performant systems, and intuitive user experiences.
+            </p>
+
+            {/* Focus Chips */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }} className="hero-roles">
+              {PERSONAL.focusAreas.map((area) => (
                 <span 
-                  key={role} 
+                  key={area}
                   style={{
-                    fontSize: '0.8rem',
+                    fontSize: '0.78rem',
                     fontWeight: 500,
-                    color: 'var(--text-secondary)',
-                    background: 'rgba(255,255,255,0.04)',
-                    padding: '0.35rem 0.75rem',
-                    borderRadius: '100px',
-                    border: '1px solid var(--border)',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--text-primary)',
+                    background: 'var(--bg-surface-solid)',
+                    border: '1px solid var(--border-bright)',
+                    padding: '0.35rem 0.85rem',
+                    borderRadius: '8px',
                   }}
                 >
-                  {role}
+                  {area}
                 </span>
               ))}
-            </motion.div>
+            </div>
 
-            {/* Short Bio Description */}
-            <motion.p 
-              variants={itemVariants}
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.975rem',
-                color: 'var(--text-secondary)',
-                lineHeight: 1.7,
-                maxWidth: '520px',
-              }}
-            >
-              {PERSONAL.shortBio}
-            </motion.p>
-
-            {/* Typing simulator status line */}
-            <motion.div variants={itemVariants} style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.45rem',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.8rem',
-              color: 'var(--text-secondary)',
-              background: 'rgba(0,0,0,0.02)',
-              padding: '0.45rem 0.8rem',
-              borderRadius: '8px',
-              border: '1px solid var(--border)',
-              width: 'fit-content'
-            }}>
-              <span style={{ color: 'var(--accent)' }}>&gt;</span>
-              <span>{currentText}</span>
-              <span className="blinking-cursor" style={{
-                width: '6px',
-                height: '13px',
-                background: 'var(--accent)',
-                display: 'inline-block',
-                marginLeft: '1px',
-              }} />
-            </motion.div>
-
-            {/* CTA Buttons */}
-            <motion.div 
-              variants={itemVariants} 
-              className="hero-ctas"
-              style={{
-                display: 'flex',
-                gap: '0.85rem',
-                marginTop: '0.5rem',
-              }}
-            >
-              <Button variant="primary" onClick={() => handleScroll('projects')}>
-                <span>View Projects</span>
+            {/* Action Buttons with clear hierarchy */}
+            <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.5rem' }} className="hero-ctas">
+              <Button variant="primary" onClick={() => handleScrollTo('projects')}>
+                <span>Explore Work</span>
                 <ArrowRight size={15} />
               </Button>
+
               <a href={PERSONAL.resume} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                 <Button variant="ghost">
                   <FileText size={15} />
                   <span>Resume</span>
                 </Button>
               </a>
-              <Button variant="ghost" onClick={() => handleScroll('contact')}>
+
+              <Button variant="ghost" onClick={() => handleScrollTo('contact')}>
                 <span>Contact</span>
               </Button>
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* Right Column: Info Panel (Development Metadata) */}
+          {/* Right Column: Physical Developer Identity Card Centerpiece (15-20% Prominence Increase) */}
           <motion.div
-            initial={{ opacity: 0, x: 25, scale: 0.98 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 90, damping: 18, delay: 0.45 }}
-            className="hero-metadata-card"
+            initial={{ opacity: 0, scale: 0.94, y: 25 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            style={{ perspective: 1000, display: 'flex', justifyContent: 'center' }}
           >
-            <GlassPanel style={{ padding: '2rem' }}>
-              <h3 style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.75rem',
-                fontWeight: 650,
-                color: 'var(--text-tertiary)',
-                marginBottom: '1.25rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}>
-                [metadata]
-              </h3>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                {devMetadata.map((row) => (
-                  <div key={row.label} style={{ display: 'flex', alignItems: 'baseline', gap: '1.5rem' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.78rem',
-                      color: 'var(--text-tertiary)',
-                      width: '70px',
-                      flexShrink: 0,
-                    }}>
-                      {row.label}
-                    </span>
-                    <span style={{
-                      fontFamily: row.isMono ? 'var(--font-mono)' : 'var(--font-body)',
-                      fontSize: '0.85rem',
-                      fontWeight: 500,
-                      color: row.accent ? 'var(--accent)' : 'var(--text-primary)',
-                    }}>
-                      {row.val}
+            <motion.div
+              ref={cardRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: 'preserve-3d',
+                width: '100%',
+                maxWidth: '470px',
+                position: 'relative',
+                borderRadius: '26px',
+                cursor: 'pointer',
+              }}
+            >
+              {/* Glass Card Container with enhanced internal spacing */}
+              <div 
+                className="glass-bright"
+                style={{
+                  position: 'relative',
+                  borderRadius: '26px',
+                  padding: '2.5rem 2.25rem',
+                  overflow: 'hidden',
+                  border: '1px solid var(--border-bright)',
+                  boxShadow: 'var(--shadow-lg)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1.75rem',
+                  background: 'var(--bg-glass-bright)',
+                }}
+              >
+                {/* Specular glare overlay following cursor */}
+                <motion.div 
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: '26px',
+                    pointerEvents: 'none',
+                    background: useTransform(
+                      [glareX, glareY],
+                      ([gx, gy]) => `radial-gradient(600px circle at ${gx}% ${gy}%, rgba(255,255,255,0.09), transparent 40%)`
+                    ),
+                    zIndex: 2,
+                  }}
+                />
+
+                {/* Top Bar: Verified Developer ID Tag */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 3 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                    <ShieldCheck size={18} style={{ color: 'var(--accent)' }} />
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-tertiary)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
+                      [ DEVELOPER ID ]
                     </span>
                   </div>
-                ))}
+                  <div style={{
+                    fontSize: '0.7rem',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--accent)',
+                    background: 'rgba(48, 209, 88, 0.1)',
+                    border: '1px solid rgba(48, 209, 88, 0.25)',
+                    padding: '0.25rem 0.65rem',
+                    borderRadius: '100px',
+                    fontWeight: 650,
+                  }}>
+                    VERIFIED
+                  </div>
+                </div>
+
+                {/* Center Section: Avatar (90px) & Info */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', position: 'relative', zIndex: 3 }}>
+                  <div style={{ position: 'relative', flexShrink: 0 }}>
+                    <img 
+                      src={PERSONAL.avatar} 
+                      alt={PERSONAL.name}
+                      style={{
+                        width: '90px',
+                        height: '90px',
+                        borderRadius: '22px',
+                        objectFit: 'cover',
+                        border: '2.5px solid var(--accent)',
+                        boxShadow: '0 10px 24px rgba(0,0,0,0.3)',
+                      }}
+                    />
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '-3px',
+                      right: '-3px',
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      background: 'var(--accent)',
+                      border: '3px solid var(--bg-surface)',
+                    }} />
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    <h2 style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '1.65rem',
+                      fontWeight: 750,
+                      color: 'var(--text-primary)',
+                      letterSpacing: '-0.02em',
+                      lineHeight: 1.15,
+                    }}>
+                      {PERSONAL.name}
+                    </h2>
+                    <span style={{ fontSize: '0.92rem', color: 'var(--accent)', fontWeight: 600 }}>
+                      {PERSONAL.title}
+                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>
+                      <MapPin size={13} style={{ color: 'var(--text-tertiary)' }} />
+                      <span>{PERSONAL.location}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Divider Line */}
+                <div style={{ height: '1px', background: 'var(--border)', width: '100%', position: 'relative', zIndex: 3 }} />
+
+                {/* Academic Details Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', position: 'relative', zIndex: 3 }}>
+                  <div style={{ background: 'var(--bg-surface-solid)', padding: '0.75rem 0.95rem', borderRadius: '14px', border: '1px solid var(--border)' }}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
+                      Degree
+                    </div>
+                    <div style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--text-primary)', marginTop: '0.2rem' }}>
+                      {PERSONAL.degree}
+                    </div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface-solid)', padding: '0.75rem 0.95rem', borderRadius: '14px', border: '1px solid var(--border)' }}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
+                      University
+                    </div>
+                    <div style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--text-primary)', marginTop: '0.2rem' }}>
+                      {PERSONAL.university}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Status Strip: Currently Exploring */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  background: 'var(--bg-surface-solid)',
+                  padding: '0.65rem 1rem',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border)',
+                  position: 'relative',
+                  zIndex: 3,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
+                    <Sparkles size={13} style={{ color: 'var(--accent)' }} />
+                    <span>Currently Exploring: Full Stack & Viz</span>
+                  </div>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: 'var(--accent)', fontWeight: 600 }}>
+                    CGPA {PERSONAL.cgpa}
+                  </span>
+                </div>
+
               </div>
-            </GlassPanel>
+            </motion.div>
           </motion.div>
 
         </div>

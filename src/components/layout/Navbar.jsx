@@ -1,51 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Command, Sun, Moon, Home, Folder, Briefcase, User, Mail } from 'lucide-react';
-
-const Github = ({ size = 16, strokeWidth = 1.75 }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-    <path d="M9 18c-4.51 2-5-2-7-2" />
-  </svg>
-);
-
-const Linkedin = ({ size = 16, strokeWidth = 1.75 }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect width="4" height="12" x="2" y="9" />
-    <circle cx="4" cy="4" r="2" />
-  </svg>
-);
-
+import { Command, Sun, Moon, Home, Folder, Briefcase, User, Mail, Sparkles, MapPin } from 'lucide-react';
 import { PERSONAL } from '../../data/portfolio';
-import { useScrollDirection } from '../../hooks/useScrollDirection';
 
 const NAV_LINKS = [
   { id: 'home', label: 'Overview' },
-  { id: 'projects', label: 'Projects' },
+  { id: 'about', label: 'About' },
   { id: 'experience', label: 'Experience' },
-  { id: 'about', label: 'Skills' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'notes', label: 'Notes' },
+  { id: 'skills', label: 'Skills' },
   { id: 'contact', label: 'Contact' },
 ];
 
 const MOBILE_NAV_LINKS = [
   { id: 'home', label: 'Overview', icon: Home },
+  { id: 'about', label: 'About', icon: User },
+  { id: 'experience', label: 'Timeline', icon: Briefcase },
   { id: 'projects', label: 'Projects', icon: Folder },
-  { id: 'experience', label: 'Experience', icon: Briefcase },
-  { id: 'about', label: 'Skills', icon: User },
+  { id: 'skills', label: 'Skills', icon: Sparkles },
   { id: 'contact', label: 'Contact', icon: Mail },
 ];
 
 export default function FloatingNav({ activeSection, scrollToSection, onOpenPalette }) {
-  const scrollDirection = useScrollDirection();
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('appearance-theme');
       if (stored) return stored;
-      return 'light';
+      return 'dark';
     }
-    return 'light';
+    return 'dark';
   });
 
   useEffect(() => {
@@ -63,7 +48,7 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 120);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -73,19 +58,17 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
     scrollToSection(id);
   };
 
-  console.log("Navbar render. activeSection prop value is:", activeSection);
-
   return (
     <>
-      {/* ── Desktop Navigation (Top Bar) ── */}
+      {/* ── Cohesive Desktop Navigation Bar (Single Unified Component) ── */}
       <motion.nav
         initial={{ y: -100, x: '-50%' }}
         animate={{ 
           y: 0,
           x: '-50%',
-          scale: scrolled ? 0.97 : 1,
+          scale: scrolled ? 0.98 : 1,
         }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
+        transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
         className="hidden-mobile"
         style={{
           position: 'fixed',
@@ -94,48 +77,98 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
           transform: 'translateX(-50%)',
           zIndex: 400,
           width: 'max-content',
-          maxWidth: '92%',
+          maxWidth: '95%',
         }}
       >
         <motion.div 
           className="glass-bright" 
           animate={{
-            height: scrolled ? 40 : 48,
+            height: scrolled ? 46 : 52,
             paddingLeft: scrolled ? 16 : 22,
             paddingRight: scrolled ? 16 : 22,
-            gap: scrolled ? '0.65rem' : '0.9rem',
+            gap: scrolled ? '0.75rem' : '1rem',
           }}
           transition={{ type: 'spring', stiffness: 380, damping: 32 }}
           style={{
             display: 'flex',
             alignItems: 'center',
             borderRadius: '100px',
+            boxShadow: 'var(--shadow-glass)',
           }}
         >
-          {/* Cursive Logo */}
-          <button 
-            onClick={() => handleNavClick('home')}
-            style={{
-              fontFamily: "'Dancing Script', cursive",
-              fontWeight: 600,
-              fontSize: '1.35rem',
-              color: 'var(--text-primary)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '0 0.25rem',
-              transition: 'color 0.25s ease',
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
-          >
-            Kanishk
-          </button>
+          {/* Cursive "Kanishk" Signature Brand / Docked Identity Badge */}
+          <AnimatePresence mode="wait">
+            {scrolled ? (
+              <motion.button
+                key="docked-badge"
+                initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.8, x: -10 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => handleNavClick('home')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  background: 'var(--bg-surface-2)',
+                  border: '1px solid var(--border-bright)',
+                  borderRadius: '100px',
+                  padding: '0.25rem 0.75rem 0.25rem 0.3rem',
+                  cursor: 'pointer',
+                }}
+                title="Return to Hero centerpiece"
+              >
+                <img 
+                  src={PERSONAL.avatar} 
+                  alt={PERSONAL.name}
+                  style={{
+                    width: '26px',
+                    height: '26px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    border: '1.5px solid var(--accent)',
+                  }}
+                />
+                <span style={{ 
+                  fontFamily: "'Dancing Script', cursive, sans-serif", 
+                  fontSize: '1.15rem', 
+                  fontWeight: 700, 
+                  color: 'var(--text-primary)' 
+                }}>
+                  Kanishk
+                </span>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)' }} />
+              </motion.button>
+            ) : (
+              <motion.button
+                key="text-logo"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                onClick={() => handleNavClick('home')}
+                style={{
+                  fontFamily: "'Dancing Script', cursive, sans-serif",
+                  fontWeight: 700,
+                  fontSize: '1.65rem',
+                  color: 'var(--text-primary)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '0 0.4rem',
+                  transition: 'color 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              >
+                Kanishk
+              </motion.button>
+            )}
+          </AnimatePresence>
 
-          <div style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 0.5rem' }} />
-
-          {/* Nav Links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+          {/* Nav Links with active sliding indicator */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', position: 'relative' }}>
             {NAV_LINKS.map((link) => {
               const isActive = activeSection === link.id;
               return (
@@ -143,7 +176,8 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
                   key={link.id}
                   onClick={() => handleNavClick(link.id)}
                   style={{
-                    background: isActive ? 'var(--bg-surface-2)' : 'transparent',
+                    position: 'relative',
+                    background: 'transparent',
                     border: 'none',
                     fontSize: '0.8rem',
                     fontWeight: isActive ? 600 : 450,
@@ -151,67 +185,83 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
                     padding: '0.35rem 0.75rem',
                     borderRadius: '100px',
                     cursor: 'pointer',
-                    transition: 'background-color 0.2s ease, color 0.2s ease, font-weight 0.2s ease',
+                    transition: 'color 0.2s ease',
+                    zIndex: 1,
                   }}
                 >
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-pill-active"
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'var(--bg-surface-2)',
+                        borderRadius: '100px',
+                        border: '1px solid var(--border-bright)',
+                        zIndex: -1,
+                      }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
                   {link.label}
                 </button>
               );
             })}
           </div>
 
-          <div style={{ width: '1px', height: '16px', background: 'var(--border)' }} />
+          <div style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 0.15rem' }} />
 
-          {/* Actions / Socials */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <a 
-              href={PERSONAL.github} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-icon"
-              style={{ width: '28px', height: '28px' }}
-              title="GitHub"
-            >
-              <Github size={13} strokeWidth={1.75} />
-            </a>
-            <a 
-              href={PERSONAL.linkedin} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-icon"
-              style={{ width: '28px', height: '28px' }}
-              title="LinkedIn"
-            >
-              <Linkedin size={13} strokeWidth={1.75} />
-            </a>
-            <div style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 0.25rem' }} />
+          {/* Integrated Workspace Status Widget Pill */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'var(--bg-surface-2)',
+            padding: '0.25rem 0.75rem',
+            borderRadius: '100px',
+            border: '1px solid var(--border)',
+            fontSize: '0.72rem',
+          }}>
+            <span style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: 'var(--accent)',
+              boxShadow: '0 0 0 2px rgba(48, 209, 88, 0.25)',
+            }} />
+            <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{PERSONAL.status}</span>
+            <span style={{ color: 'var(--text-tertiary)' }}>•</span>
+            <span style={{ color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <MapPin size={11} />
+              <span>{PERSONAL.location}</span>
+            </span>
           </div>
 
-          {/* Search commands & theme toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          {/* Search Commands & Theme Toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginLeft: '0.25rem' }}>
             <button
               onClick={onOpenPalette}
               className="btn-ghost"
               style={{
-                padding: '0.35rem 0.65rem',
+                padding: '0.3rem 0.6rem',
                 borderRadius: '100px',
                 fontSize: '0.72rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.3rem',
               }}
-              title="Search commands (Ctrl+K)"
+              title="Open Command Palette (Cmd+K)"
             >
               <Command size={11} strokeWidth={1.75} />
-              <span>K</span>
+              <span style={{ fontFamily: 'var(--font-mono)' }}>K</span>
             </button>
 
             <button
               onClick={toggleTheme}
               className="btn-ghost"
               style={{
-                width: '28px',
-                height: '28px',
+                width: '30px',
+                height: '30px',
                 borderRadius: '50%',
                 padding: '0',
                 display: 'flex',
@@ -220,13 +270,13 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
               }}
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
-              {theme === 'light' ? <Moon size={13} strokeWidth={1.75} /> : <Sun size={13} strokeWidth={1.75} />}
+              {theme === 'light' ? <Moon size={14} strokeWidth={1.75} /> : <Sun size={14} strokeWidth={1.75} />}
             </button>
           </div>
         </motion.div>
       </motion.nav>
 
-      {/* ── Mobile Navigation (Bottom Capsule Tab Bar) ── */}
+      {/* ── Mobile Bottom Navigation Bar ── */}
       <div 
         className="mobile-bottom-nav-container"
         style={{
@@ -245,8 +295,8 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             display: 'flex',
             width: '100%',
             borderRadius: '20px',
-            padding: '0.45rem',
-            paddingBottom: 'calc(0.45rem + env(safe-area-inset-bottom, 0px))',
+            padding: '0.4rem',
+            paddingBottom: 'calc(0.4rem + env(safe-area-inset-bottom, 0px))',
             justifyContent: 'space-around',
             alignItems: 'center',
             boxShadow: 'var(--shadow-lg)',
@@ -265,32 +315,31 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '3px',
-                  height: '44px',
+                  gap: '2px',
+                  height: '42px',
                   background: isActive ? 'var(--bg-surface-2)' : 'transparent',
                   border: 'none',
                   borderRadius: '12px',
                   color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease, color 0.2s ease',
-                  padding: '4px 0',
+                  padding: '3px 0',
                 }}
               >
                 <Icon size={16} strokeWidth={isActive ? 2.25 : 1.75} />
-                <span style={{ fontSize: '0.62rem', fontWeight: isActive ? 600 : 500 }}>{link.label}</span>
+                <span style={{ fontSize: '0.6rem', fontWeight: isActive ? 600 : 500 }}>{link.label}</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* ── Mobile Action Triggers (FABs) ── */}
-      {/* Theme Toggle (Bottom-Left FAB) */}
+      {/* ── Mobile Action FABs ── */}
       <div 
         className="mobile-bottom-nav-container"
         style={{
           position: 'fixed',
-          bottom: 'calc(5.75rem + env(safe-area-inset-bottom, 0px))',
+          bottom: 'calc(5.5rem + env(safe-area-inset-bottom, 0px))',
           left: '1.25rem',
           zIndex: 400,
         }}
@@ -299,8 +348,8 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
           onClick={toggleTheme}
           className="glass-bright"
           style={{
-            width: '44px',
-            height: '44px',
+            width: '42px',
+            height: '42px',
             borderRadius: '50%',
             border: '1px solid var(--border-bright)',
             boxShadow: 'var(--shadow-md)',
@@ -312,16 +361,15 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             padding: 0,
           }}
         >
-          {theme === 'light' ? <Moon size={16} strokeWidth={1.75} /> : <Sun size={16} strokeWidth={1.75} />}
+          {theme === 'light' ? <Moon size={15} strokeWidth={1.75} /> : <Sun size={15} strokeWidth={1.75} />}
         </button>
       </div>
 
-      {/* Command Palette Trigger (Bottom-Right FAB) */}
       <div 
         className="mobile-bottom-nav-container"
         style={{
           position: 'fixed',
-          bottom: 'calc(5.75rem + env(safe-area-inset-bottom, 0px))',
+          bottom: 'calc(5.5rem + env(safe-area-inset-bottom, 0px))',
           right: '1.25rem',
           zIndex: 400,
         }}
@@ -330,8 +378,8 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
           onClick={onOpenPalette}
           className="glass-bright"
           style={{
-            width: '44px',
-            height: '44px',
+            width: '42px',
+            height: '42px',
             borderRadius: '50%',
             border: '1px solid var(--border-bright)',
             boxShadow: 'var(--shadow-md)',
@@ -343,7 +391,7 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             padding: 0,
           }}
         >
-          <Command size={16} strokeWidth={1.75} />
+          <Command size={15} strokeWidth={1.75} />
         </button>
       </div>
     </>

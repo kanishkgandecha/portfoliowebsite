@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Button({ children, variant = 'primary', iconOnly = false, className = '', ...props }) {
+export default function Button({ children, variant = 'primary', className = '', ...props }) {
   const btnClass = variant === 'primary' ? 'btn-primary' : variant === 'ghost' ? 'btn-ghost' : 'btn-icon';
   const finalClass = variant === 'icon' ? 'btn-icon' : 'btn';
 

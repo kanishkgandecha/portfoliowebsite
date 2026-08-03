@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Layout & Core UI
 import Navbar from './components/layout/Navbar';
@@ -8,16 +8,17 @@ import CommandPalette from './components/ui/CommandPalette';
 
 // Sections
 import Hero from './components/sections/Hero';
-import Projects from './components/sections/Projects';
-import Experience from './components/sections/Experience';
-import InternshipHighlights from './components/sections/InternshipHighlights';
 import About from './components/sections/About';
+import Experience from './components/sections/Experience';
+import Projects from './components/sections/Projects';
+import EngineeringNotes from './components/sections/EngineeringNotes';
+import Skills from './components/sections/Skills';
 import Contact from './components/sections/Contact';
 
 // Hooks
 import { useActiveSection } from './hooks/useActiveSection';
 
-const SECTION_IDS = ['home', 'projects', 'experience', 'highlights', 'about', 'contact'];
+const SECTION_IDS = ['home', 'about', 'experience', 'projects', 'notes', 'skills', 'contact'];
 
 export default function App() {
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -49,7 +50,7 @@ export default function App() {
         onOpenPalette={() => setPaletteOpen(true)}
       />
 
-      {/* Universal Search Command Palette */}
+      {/* Raycast-style Universal Command Palette */}
       <CommandPalette 
         isOpen={paletteOpen} 
         onClose={() => setPaletteOpen(false)}
@@ -58,26 +59,29 @@ export default function App() {
 
       {/* Core layout sections */}
       <main>
-        {/* Hero Experience */}
+        {/* Hero Experience — Developer Identity Card Centerpiece */}
         <Hero />
 
-        {/* Shipped Products showcase */}
-        <Projects />
-
-        {/* Experience & Timeline logs */}
-        <Experience />
-
-        {/* Internship Achievement Highlights */}
-        <InternshipHighlights />
-
-        {/* Skills Constellation & Journey */}
+        {/* Narrative About & Core Engineering Pillars */}
         <About />
 
-        {/* Communication Desk panel */}
+        {/* Career Experience & Education Timeline */}
+        <Experience />
+
+        {/* Workspace Window Projects Showcase */}
+        <Projects />
+
+        {/* Technical Insights & Engineering Notes */}
+        <EngineeringNotes />
+
+        {/* Interactive Floating Skill Capsules */}
+        <Skills />
+
+        {/* Communication Desk & Contact Suite */}
         <Contact />
       </main>
 
-      {/* Credits & copyright */}
+      {/* Credits & Footer */}
       <Footer />
     </div>
   );

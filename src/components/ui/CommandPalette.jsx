@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Folder, Briefcase, User, Mail, FileText, CornerDownLeft } from 'lucide-react';
+import { Search, Folder, Briefcase, User, Mail, FileText, CornerDownLeft, BookOpen, Cpu, Check } from 'lucide-react';
 
-const Github = ({ size = 16 }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
-    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+const GithubIcon = ({ size = 16 }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
   </svg>
 );
 
-const Linkedin = ({ size = 16 }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+const LinkedinIcon = ({ size = 16 }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
   </svg>
 );
 
@@ -21,14 +24,17 @@ const ICON_MAP = {
   briefcase: Briefcase,
   user: User,
   mail: Mail,
+  book: BookOpen,
+  cpu: Cpu,
   'file-text': FileText,
-  github: Github,
-  linkedin: Linkedin,
+  github: GithubIcon,
+  linkedin: LinkedinIcon,
 };
 
 export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [copiedToast, setCopiedToast] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const inputRef = useRef(null);
   const listRef = useRef(null);
@@ -42,10 +48,13 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
 
   useEffect(() => {
     if (isOpen) {
-      setQuery('');
-      setSelectedIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 100);
       document.body.style.overflow = 'hidden';
+      const timer = setTimeout(() => {
+        setQuery('');
+        setSelectedIndex(0);
+        inputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
     } else {
       document.body.style.overflow = 'unset';
     }
@@ -62,14 +71,21 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
   const handleAction = (action) => {
     if (action.section) {
       scrollToSection(action.section);
+      onClose();
     } else if (action.href) {
       window.open(action.href, '_blank', 'noopener,noreferrer');
+      onClose();
     } else if (action.action === 'resume') {
       window.open(PERSONAL.resume, '_blank', 'noopener,noreferrer');
+      onClose();
     } else if (action.action === 'email') {
-      window.location.href = `mailto:${PERSONAL.email}`;
+      navigator.clipboard.writeText(PERSONAL.email);
+      setCopiedToast(true);
+      setTimeout(() => {
+        setCopiedToast(false);
+        onClose();
+      }, 1200);
     }
-    onClose();
   };
 
   useEffect(() => {
@@ -81,10 +97,10 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
         onClose();
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev + 1) % filteredActions.length);
+        setSelectedIndex((prev) => (prev + 1) % Math.max(1, filteredActions.length));
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev - 1 + filteredActions.length) % filteredActions.length);
+        setSelectedIndex((prev) => (prev - 1 + filteredActions.length) % Math.max(1, filteredActions.length));
       } else if (e.key === 'Enter') {
         e.preventDefault();
         if (filteredActions[selectedIndex]) {
@@ -97,7 +113,6 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, selectedIndex, filteredActions]);
 
-  // Adjust scroll position of list when selection changes
   useEffect(() => {
     if (listRef.current) {
       const selectedElement = listRef.current.children[selectedIndex];
@@ -138,14 +153,40 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
             style={{
               width: '100%',
               maxWidth: '600px',
-              borderRadius: '16px',
+              borderRadius: '20px',
               overflow: 'hidden',
-              boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.75)',
               border: '1px solid var(--border-bright)',
+              background: 'var(--bg-surface-solid)',
             }}
-            className="glass-bright command-palette-sheet"
           >
-            {/* Search Input Container */}
+            {/* Toast Feedback Banner when Copy Email selected */}
+            <AnimatePresence>
+              {copiedToast && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  style={{
+                    background: 'var(--accent)',
+                    color: '#000',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    textAlign: 'center',
+                    padding: '0.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                  }}
+                >
+                  <Check size={14} />
+                  <span>Email address copied to clipboard!</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Search Input Bar */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -153,7 +194,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
               borderBottom: '1px solid var(--border)',
               gap: '0.85rem'
             }}>
-              <Search size={18} style={{ color: 'var(--text-secondary)' }} />
+              <Search size={18} style={{ color: 'var(--accent)' }} />
               <input
                 ref={inputRef}
                 type="text"
@@ -162,7 +203,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                   setQuery(e.target.value);
                   setSelectedIndex(0);
                 }}
-                placeholder="Where would you like to go?"
+                placeholder="Type a command or search workspace..."
                 style={{
                   flex: 1,
                   background: 'none',
@@ -176,6 +217,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
               {!isMobile && (
                 <span style={{
                   fontSize: '0.72rem',
+                  fontFamily: 'var(--font-mono)',
                   color: 'var(--text-tertiary)',
                   background: 'rgba(255,255,255,0.06)',
                   padding: '0.25rem 0.5rem',
@@ -187,7 +229,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
               )}
             </div>
 
-            {/* Actions List */}
+            {/* Raycast Action Items List */}
             <div 
               ref={listRef}
               style={{
@@ -215,10 +257,12 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         padding: isMobile ? '0.95rem 1rem' : '0.8rem 1rem',
-                        borderRadius: '10px',
+                        borderRadius: '12px',
                         cursor: 'pointer',
-                        background: isSelected ? 'rgba(255,255,255,0.08)' : 'transparent',
-                        transition: 'background 0.15s ease',
+                        background: isSelected ? 'rgba(48, 209, 88, 0.1)' : 'transparent',
+                        border: '1px solid',
+                        borderColor: isSelected ? 'rgba(48, 209, 88, 0.25)' : 'transparent',
+                        transition: 'all 0.15s ease',
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
@@ -226,7 +270,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                           width: '32px',
                           height: '32px',
                           borderRadius: '8px',
-                          background: isSelected ? 'rgba(52, 199, 89, 0.15)' : 'rgba(255,255,255,0.04)',
+                          background: isSelected ? 'rgba(48, 209, 88, 0.15)' : 'rgba(255,255,255,0.04)',
                           color: isSelected ? 'var(--accent)' : 'var(--text-secondary)',
                           display: 'flex',
                           alignItems: 'center',
@@ -237,8 +281,8 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                         </div>
                         <div>
                           <div style={{
-                            fontSize: '0.875rem',
-                            fontWeight: 500,
+                            fontSize: '0.88rem',
+                            fontWeight: isSelected ? 600 : 500,
                             color: 'var(--text-primary)',
                           }}>
                             {action.label}
@@ -252,33 +296,23 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                         </div>
                       </div>
 
-                      {isSelected && !isMobile && (
-                        <motion.span 
-                          initial={{ opacity: 0, x: -5 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            fontSize: '0.68rem',
-                            color: 'var(--text-tertiary)'
-                          }}
-                        >
+                      {isSelected && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--accent)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>
                           <span>Select</span>
-                          <CornerDownLeft size={10} />
-                        </motion.span>
+                          <CornerDownLeft size={12} />
+                        </div>
                       )}
                     </div>
                   );
                 })
               ) : (
                 <div style={{
-                  padding: '2.5rem 1.5rem',
+                  padding: '2.5rem 1rem',
                   textAlign: 'center',
                   color: 'var(--text-tertiary)',
-                  fontSize: '0.875rem'
+                  fontSize: '0.88rem'
                 }}>
-                  No results found for "{query}"
+                  No commands matching "{query}"
                 </div>
               )}
             </div>

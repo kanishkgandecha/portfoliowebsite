@@ -10,6 +10,7 @@
   --bg-secondary:    #E5E5EA;  /* Apple gray 6 */
   --bg-surface:      #FFFFFF;  /* Clean white surface */
   --bg-surface-2:    #F2F2F7;  /* Apple gray 5 */
+  --bg-surface-solid:#FFFFFF;  /* Solid surface for light mode */
   --bg-glass:        rgba(255, 255, 255, 0.72);
   --bg-glass-bright: rgba(255, 255, 255, 0.85);
   --noise-opacity:   0.015;
@@ -63,6 +64,7 @@
   --bg-secondary:    #141517;  /* Base surface */
   --bg-surface:      #1B1C1E;  /* Elevated surface */
   --bg-surface-2:    #242528;
+  --bg-surface-solid:#16171A;  /* Clean solid surface for cards */
   --bg-glass:        rgba(22, 23, 26, 0.72);
   --bg-glass-bright: rgba(32, 34, 38, 0.82);
   --noise-opacity:   0.03;

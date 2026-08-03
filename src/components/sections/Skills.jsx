@@ -1,327 +1,231 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Cpu, Sparkles, Check, Code, Database, Terminal, Layers } from 'lucide-react';
+import { TECH_STACK, TECH_CATEGORIES } from '../../data/portfolio';
 import SectionHeader from '../ui/SectionHeader';
-import { SKILLS_NODES, SKILL_CONNECTIONS, SKILL_CATEGORIES } from '../../data/portfolio';
-
-const SVG_W = 760;
-const SVG_H = 500;
-
-function SkillNode({ node, isActive, isConnected, isDimmed, onClick }) {
-  const cat = SKILL_CATEGORIES[node.category];
-  const color = cat?.color || '#8892A4';
-
-  const glowColor = isActive ? color : isConnected ? `${color}80` : 'transparent';
-  const textColor = isDimmed ? 'var(--text-dim)' : isActive ? color : isConnected ? 'var(--text-secondary)' : 'var(--text-secondary)';
-  const circleStroke = isActive ? color : isConnected ? `${color}80` : 'var(--border)';
-  const circleFill = isActive ? `${color}20` : isConnected ? `${color}08` : 'var(--bg-surface)';
-  const opacity = isDimmed ? 0.3 : 1;
-
-  return (
-    <g
-      transform={`translate(${node.x}, ${node.y})`}
-      onClick={() => onClick(node)}
-      style={{ cursor: 'pointer', opacity, transition: 'opacity 0.3s' }}
-    >
-      {/* Glow ring */}
-      {(isActive || isConnected) && (
-        <circle r={isActive ? 22 : 18} fill="none" stroke={glowColor} strokeWidth={isActive ? 1.5 : 0.8}
-          style={{ filter: isActive ? `drop-shadow(0 0 8px ${color})` : 'none', transition: 'all 0.3s' }} />
-      )}
-
-      {/* Main circle */}
-      <circle r={16} fill={circleFill} stroke={circleStroke} strokeWidth={1}
-        style={{ transition: 'all 0.3s' }} />
-
-      {/* Label */}
-      <text
-        y="28" textAnchor="middle"
-        style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', fill: textColor, transition: 'fill 0.3s', userSelect: 'none' }}
-      >
-        {node.label}
-      </text>
-
-      {/* Icon text */}
-      <text y="5" textAnchor="middle"
-        style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fill: isActive ? color : 'var(--text-dim)', userSelect: 'none', transition: 'fill 0.3s' }}
-      >
-        {node.icon}
-      </text>
-    </g>
-  );
-}
 
 export default function Skills() {
-  const [activeId, setActiveId] = useState(null);
-  const svgRef = useRef(null);
+  const [activeSkillId, setActiveSkillId] = useState(TECH_STACK[0]?.id || 'react');
+  const [activeCategory, setActiveCategory] = useState('all');
 
-  // Find which nodes are connected to the active node
-  const connectedIds = activeId
-    ? SKILL_CONNECTIONS
-        .filter(([a, b]) => a === activeId || b === activeId)
-        .map(([a, b]) => (a === activeId ? b : a))
-    : [];
+  const filteredTech = activeCategory === 'all' 
+    ? TECH_STACK 
+    : TECH_STACK.filter(t => t.category === activeCategory);
 
-  const activeNode = SKILLS_NODES.find((n) => n.id === activeId);
-
-  const handleClick = (node) => {
-    setActiveId((prev) => (prev === node.id ? null : node.id));
-  };
-
-  const getConnectionOpacity = (a, b) => {
-    if (!activeId) return 0.12;
-    if (a === activeId || b === activeId) return 0.7;
-    return 0.03;
-  };
-
-  const getConnectionColor = (a, b) => {
-    if (activeId && (a === activeId || b === activeId)) {
-      const node = a === activeId ? SKILLS_NODES.find((n) => n.id === a) : SKILLS_NODES.find((n) => n.id === a);
-      return SKILL_CATEGORIES[node?.category]?.color || '#10B981';
-    }
-    return '#8892A4';
-  };
+  const activeSkill = TECH_STACK.find(t => t.id === activeSkillId) || TECH_STACK[0];
 
   return (
-    <section id="skills" style={{ padding: 'var(--section-padding)', position: 'relative', background: 'var(--bg-base)' }}>
-      <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 10 }}>
-        <SectionHeader
-          number="05"
-          label="TECH STACK"
-          title="Technology Ecosystem"
-          subtitle="Click any skill to reveal connections and projects. The constellation shows how technologies relate."
+    <section id="skills" className="section">
+      <div className="container">
+        <SectionHeader 
+          eyebrow="Skills"
+          title="Technologies & Tools"
+          subtitle="Click or hover any skill capsule to see recently used projects and specialties."
         />
 
-        {/* Category legend */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '2.5rem' }}
-        >
-          {Object.entries(SKILL_CATEGORIES).map(([key, cat]) => (
-            <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: cat.color }} />
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', letterSpacing: '0.05em' }}>
-                {cat.label}
-              </span>
-            </div>
-          ))}
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', marginLeft: 'auto' }}>
-            Click a node to explore
-          </span>
-        </motion.div>
-
-        {/* Main ecosystem area */}
-        <div className="md-grid-skills" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem', alignItems: 'start' }}>
-
-          {/* SVG constellation */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="os-card"
+        {/* Category Filters */}
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+          justifyContent: 'center',
+          marginTop: '1.5rem',
+          marginBottom: '2.5rem',
+        }}>
+          <button
+            onClick={() => setActiveCategory('all')}
             style={{
-              padding: '1.5rem', background: 'var(--bg-surface)',
-              borderRadius: '16px', overflow: 'hidden', position: 'relative',
+              background: activeCategory === 'all' ? 'var(--accent)' : 'var(--bg-surface-solid)',
+              color: activeCategory === 'all' ? '#000' : 'var(--text-secondary)',
+              border: '1px solid',
+              borderColor: activeCategory === 'all' ? 'var(--accent)' : 'var(--border)',
+              padding: '0.4rem 0.9rem',
+              borderRadius: '100px',
+              fontSize: '0.78rem',
+              fontWeight: activeCategory === 'all' ? 600 : 500,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
             }}
           >
-            {/* Background grid */}
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.3 }}>
-              <div className="animated-grid" style={{ position: 'absolute', inset: 0 }} />
-            </div>
-
-            <svg
-              ref={svgRef}
-              viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-              style={{ width: '100%', height: 'auto', maxHeight: '500px', display: 'block', position: 'relative', zIndex: 1 }}
+            All Technologies
+          </button>
+          {Object.entries(TECH_CATEGORIES).map(([catKey, catObj]) => (
+            <button
+              key={catKey}
+              onClick={() => setActiveCategory(catKey)}
+              style={{
+                background: activeCategory === catKey ? 'var(--accent)' : 'var(--bg-surface-solid)',
+                color: activeCategory === catKey ? '#000' : 'var(--text-secondary)',
+                border: '1px solid',
+                borderColor: activeCategory === catKey ? 'var(--accent)' : 'var(--border)',
+                padding: '0.4rem 0.9rem',
+                borderRadius: '100px',
+                fontSize: '0.78rem',
+                fontWeight: activeCategory === catKey ? 600 : 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
             >
-              {/* Connection lines */}
-              {SKILL_CONNECTIONS.map(([a, b]) => {
-                const nodeA = SKILLS_NODES.find((n) => n.id === a);
-                const nodeB = SKILLS_NODES.find((n) => n.id === b);
-                if (!nodeA || !nodeB) return null;
-                const color = getConnectionColor(a, b);
-                const opacity = getConnectionOpacity(a, b);
-                return (
-                  <line
-                    key={`${a}-${b}`}
-                    x1={nodeA.x} y1={nodeA.y}
-                    x2={nodeB.x} y2={nodeB.y}
-                    stroke={color}
-                    strokeWidth={activeId && (a === activeId || b === activeId) ? 1.5 : 0.8}
-                    strokeOpacity={opacity}
-                    style={{ transition: 'stroke-opacity 0.3s, stroke-width 0.3s' }}
-                  />
-                );
-              })}
+              {catObj.label}
+            </button>
+          ))}
+        </div>
 
-              {/* Category cluster labels */}
-              {Object.entries({
-                Frontend: { x: 180, y: 65 },
-                Backend: { x: 590, y: 65 },
-                Database: { x: 640, y: 460 },
-                'AI / ML': { x: 185, y: 460 },
-                Tools: { x: 415, y: 18 },
-                'Core CS': { x: 430, y: 490 },
-              }).map(([label, pos]) => (
-                <text key={label} x={pos.x} y={pos.y} textAnchor="middle"
-                  style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', fill: 'var(--text-dim)', letterSpacing: '0.1em', userSelect: 'none' }}>
-                  {label.toUpperCase()}
-                </text>
-              ))}
-
-              {/* Skill nodes */}
-              {SKILLS_NODES.map((node) => {
-                const isActive = activeId === node.id;
-                const isConnected = connectedIds.includes(node.id);
-                const isDimmed = activeId && !isActive && !isConnected;
-                return (
-                  <SkillNode
-                    key={node.id}
-                    node={node}
-                    isActive={isActive}
-                    isConnected={isConnected}
-                    isDimmed={isDimmed}
-                    onClick={handleClick}
-                  />
-                );
-              })}
-            </svg>
-          </motion.div>
-
-          {/* Detail panel */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <AnimatePresence mode="wait">
-              {activeNode ? (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+          gap: '2.5rem',
+          alignItems: 'start',
+        }} className="md-grid-2col">
+          
+          {/* Left Column: Skill Capsules Grid */}
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+          }}>
+            {filteredTech.map((tech, idx) => {
+              const isSelected = tech.id === activeSkillId;
+              return (
                 <motion.div
-                  key={activeNode.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="os-card"
-                  style={{ padding: '1.5rem' }}
+                  key={tech.id}
+                  onClick={() => setActiveSkillId(tech.id)}
+                  onMouseEnter={() => setActiveSkillId(tech.id)}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: isSelected ? 1.05 : 1,
+                    y: [0, -2, 0],
+                  }}
+                  transition={{ 
+                    y: { duration: 3, repeat: Infinity, ease: 'easeInOut', delay: idx * 0.2 },
+                    scale: { duration: 0.2 },
+                    opacity: { duration: 0.3 }
+                  }}
+                  style={{
+                    background: isSelected ? 'rgba(48, 209, 88, 0.12)' : 'var(--bg-surface-solid)',
+                    border: '1px solid',
+                    borderColor: isSelected ? 'var(--accent)' : 'var(--border-bright)',
+                    padding: '0.65rem 1.1rem',
+                    borderRadius: '100px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    boxShadow: isSelected ? '0 0 15px rgba(48, 209, 88, 0.2)' : 'var(--shadow-sm)',
+                    transition: 'border-color 0.2s ease, background 0.2s ease',
+                  }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                    <span style={{ fontSize: '1.5rem' }}>{activeNode.icon}</span>
-                    <div>
-                      <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                        {activeNode.label}
-                      </div>
-                      <div style={{
-                        fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.1em',
-                        color: SKILL_CATEGORIES[activeNode.category]?.color,
-                        marginTop: '0.15rem',
-                      }}>
-                        {SKILL_CATEGORIES[activeNode.category]?.label?.toUpperCase()}
-                      </div>
+                  <span style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: isSelected ? 'var(--accent)' : 'var(--text-tertiary)',
+                  }} />
+                  <span style={{
+                    fontSize: '0.85rem',
+                    fontWeight: isSelected ? 650 : 500,
+                    color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  }}>
+                    {tech.label}
+                  </span>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Right Column: Selected Skill Details Card */}
+          <div style={{
+            background: 'var(--bg-surface-solid)',
+            border: '1px solid var(--border-bright)',
+            borderRadius: '20px',
+            padding: '2rem',
+            boxShadow: 'var(--shadow-md)',
+            minHeight: '300px',
+          }}>
+            <AnimatePresence mode="wait">
+              {activeSkill && (
+                <motion.div
+                  key={activeSkill.id}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.2 }}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Cpu size={20} style={{ color: 'var(--accent)' }} />
+                      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                        {activeSkill.label}
+                      </h3>
                     </div>
+
+                    <span style={{
+                      fontSize: '0.72rem',
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--accent)',
+                      background: 'rgba(48, 209, 88, 0.1)',
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '100px',
+                      border: '1px solid rgba(48, 209, 88, 0.25)',
+                      textTransform: 'uppercase',
+                    }}>
+                      {activeSkill.category}
+                    </span>
                   </div>
 
-                  {/* Experience level */}
-                  <div style={{ marginBottom: '1.25rem' }}>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-dim)', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
-                      PROFICIENCY
+                  {/* Recently Used Block */}
+                  <div>
+                    <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '0.45rem', letterSpacing: '0.04em' }}>
+                      [ Recently Used In ]
                     </div>
-                    <div style={{ display: 'flex', gap: '0.35rem' }}>
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <div key={i} style={{
-                          flex: 1, height: '4px', borderRadius: '2px',
-                          background: i < activeNode.level
-                            ? SKILL_CATEGORIES[activeNode.category]?.color || 'var(--emerald)'
-                            : 'var(--border)',
-                          transition: 'background 0.3s',
-                        }} />
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                      {activeSkill.recentlyUsed && activeSkill.recentlyUsed.map((proj) => (
+                        <span 
+                          key={proj}
+                          style={{
+                            fontSize: '0.78rem',
+                            fontWeight: 500,
+                            color: 'var(--accent)',
+                            background: 'rgba(48, 209, 88, 0.06)',
+                            border: '1px solid rgba(48, 209, 88, 0.2)',
+                            padding: '0.25rem 0.65rem',
+                            borderRadius: '6px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                          }}
+                        >
+                          <span>✓</span>
+                          <span>{proj}</span>
+                        </span>
                       ))}
                     </div>
                   </div>
 
-                  {/* Projects using this skill */}
-                  <div style={{ marginBottom: '1.25rem' }}>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-dim)', letterSpacing: '0.1em', marginBottom: '0.6rem' }}>
-                      USED IN
+                  <div style={{ height: '1px', background: 'var(--border)', width: '100%' }} />
+
+                  {/* Specialties List */}
+                  <div>
+                    <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.04em' }}>
+                      [ Key Specialties ]
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                      {activeNode.projects.map((p) => (
-                        <div key={p} style={{
-                          fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
-                          color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem',
-                        }}>
-                          <span style={{ color: SKILL_CATEGORIES[activeNode.category]?.color || 'var(--emerald)' }}>›</span>
-                          {p}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                      {activeSkill.specialties && activeSkill.specialties.map((spec) => (
+                        <div key={spec} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.86rem', color: 'var(--text-secondary)' }}>
+                          <span style={{ color: 'var(--accent)' }}>•</span>
+                          <span>{spec}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Connected skills */}
-                  {connectedIds.length > 0 && (
-                    <div>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-dim)', letterSpacing: '0.1em', marginBottom: '0.6rem' }}>
-                        CONNECTS TO
-                      </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                        {connectedIds.map((cid) => {
-                          const cn = SKILLS_NODES.find((n) => n.id === cid);
-                          return cn ? (
-                            <button
-                              key={cid}
-                              onClick={() => handleClick(cn)}
-                              style={{
-                                fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
-                                color: SKILL_CATEGORIES[cn.category]?.color || 'var(--text-secondary)',
-                                background: `${SKILL_CATEGORIES[cn.category]?.color}10` || 'var(--bg-elevated)',
-                                border: `1px solid ${SKILL_CATEGORIES[cn.category]?.color}30` || 'var(--border)',
-                                borderRadius: '6px', padding: '0.2rem 0.55rem',
-                                transition: 'all 0.2s',
-                              }}
-                            >
-                              {cn.label}
-                            </button>
-                          ) : null;
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="idle"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="os-card"
-                  style={{ padding: '1.5rem', textAlign: 'center' }}
-                >
-                  <div style={{ fontSize: '2rem', marginBottom: '0.75rem', opacity: 0.5 }}>⬡</div>
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.8 }}>
-                    Select a node to explore proficiency, connected skills, and related projects.
-                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            {/* Summary stats */}
-            <div className="os-card" style={{ padding: '1.25rem' }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-dim)', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-                ECOSYSTEM STATS
-              </div>
-              {Object.entries(SKILL_CATEGORIES).map(([key, cat]) => {
-                const count = SKILLS_NODES.filter((n) => n.category === key).length;
-                return (
-                  <div key={key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: cat.color }} />
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>{cat.label}</span>
-                    </div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: cat.color }}>{count}</span>
-                  </div>
-                );
-              })}
-            </div>
           </div>
+
         </div>
       </div>
     </section>

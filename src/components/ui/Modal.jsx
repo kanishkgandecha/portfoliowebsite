@@ -335,7 +335,10 @@ export default function Modal({ project, isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      setActiveTab('Preview'); // reset to Preview when opened
+      const timer = setTimeout(() => {
+        setActiveTab('Preview');
+      }, 50);
+      return () => clearTimeout(timer);
     } else {
       document.body.style.overflow = 'unset';
     }
@@ -460,7 +463,6 @@ export default function Modal({ project, isOpen, onClose }) {
                 borderTopLeftRadius: '12px',
                 borderTopRightRadius: '12px',
                 border: '1px solid var(--border)',
-                borderBottom: 'none',
                 overflowX: 'auto',
               }}>
                 {tabs.map((tab) => (
