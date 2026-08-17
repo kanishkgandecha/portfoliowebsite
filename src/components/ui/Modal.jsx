@@ -69,6 +69,28 @@ function WindowWrapper({ projectId, children }) {
 
 function PreviewTab({ projectId, accentColor }) {
   switch (projectId) {
+    case 'developer-platform':
+    case 'developer_platform':
+      return (
+        <div style={{ padding: '0.8rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%', overflow: 'hidden' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+            {['v1.0.0', '7 AI Agents', 'pgvector HNSW'].map((text, i) => (
+              <div key={i} style={{ background: 'var(--bg-secondary)', borderRadius: '4px', padding: '0.3rem', textAlign: 'center', fontSize: '9px', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
+                {text}
+              </div>
+            ))}
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem', justifyContent: 'center' }}>
+            <div style={{ background: 'var(--bg-secondary)', borderRadius: '6px', padding: '0.45rem 0.65rem', fontSize: '9px', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+              <span style={{ color: 'var(--accent-blue)', fontWeight: 600 }}>Pipeline: </span>
+              <span>Ingestion → AST Static Rules → pgvector RAG → 7 Agents</span>
+            </div>
+            <div style={{ background: 'rgba(10, 132, 255, 0.08)', borderRadius: '6px', padding: '0.45rem 0.65rem', fontSize: '9px', color: 'var(--accent-blue)', border: '1px solid rgba(10, 132, 255, 0.2)' }}>
+              <span>Findings grounded with source citations & evidence extraction</span>
+            </div>
+          </div>
+        </div>
+      );
     case 'medilink':
       return (
         <div style={{ padding: '0.8rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%', overflow: 'hidden' }}>
@@ -166,6 +188,9 @@ function PreviewTab({ projectId, accentColor }) {
 function ArchitectureTab({ projectId }) {
   const getArchNodes = () => {
     switch (projectId) {
+      case 'developer-platform':
+      case 'developer_platform':
+        return { client: 'Next.js App Router', api: 'Fastify REST API', server: 'BullMQ / Redis Workers', db: 'PostgreSQL + pgvector' };
       case 'medilink':
         return { client: 'React UI', api: 'REST JWT', server: 'Node / Express', db: 'MongoDB' };
       case 'electrohub':
@@ -200,6 +225,12 @@ function ArchitectureTab({ projectId }) {
 function ApiTab({ projectId }) {
   const getEndpoints = () => {
     switch (projectId) {
+      case 'developer-platform':
+      case 'developer_platform':
+        return [
+          { method: 'POST', path: '/api/repos/ingest', desc: 'Isolated repository workspace ingestion' },
+          { method: 'GET', path: '/api/analysis/agents', desc: '7 AI agent evidence-backed findings' }
+        ];
       case 'medilink':
         return [
           { method: 'GET', path: '/api/v1/patients', desc: 'Fetch user list' },
@@ -243,6 +274,9 @@ function ApiTab({ projectId }) {
 function SetupTab({ projectId }) {
   const getCmds = () => {
     switch (projectId) {
+      case 'developer-platform':
+      case 'developer_platform':
+        return ['git clone https://github.com/kanishkgandecha/developer_platform', 'docker-compose up -d', 'npm run dev'];
       case 'medilink':
         return ['git clone medilink.git', 'npm install', 'npm run dev'];
       case 'electrohub':

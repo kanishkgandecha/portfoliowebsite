@@ -17,7 +17,7 @@ export const PERSONAL = {
   location: 'Mumbai, India',
   github: 'https://github.com/kanishkgandecha',
   linkedin: 'https://www.linkedin.com/in/kanishk-gandecha/',
-  resume: 'https://drive.google.com/file/d/1eJhVm0OvVJMIwQGzzfksa7NSs4K_wQHu/view?usp=sharing',
+  resume: 'https://drive.google.com/drive/folders/1bKMwqs1M5A9CwXHbS2NTxqez4pjJDhtG?usp=sharing',
   cgpa: '8.23',
   university: 'K.J. Somaiya COE',
   universityFull: 'K.J. Somaiya College of Engineering',
@@ -25,7 +25,7 @@ export const PERSONAL = {
   year: '2023 – Present',
   status: 'Available for Internships',
   availableFrom: 'Immediately',
-  latestProject: 'Portfolio',
+  latestProject: 'Developer Platform',
   githubActivity: '120+ commits this month',
   focusAreas: [
     'Full Stack',
@@ -92,6 +92,59 @@ export const INTERNSHIP_HIGHLIGHTS = [
 // ── Projects ──────────────────────────────────────────────────────────────────
 
 export const PROJECTS = [
+  {
+    id: 'developer-platform',
+    title: 'Developer Platform',
+    subtitle: 'Code Intelligence & Multi-Agent AI Platform',
+    category: 'Full Stack · AI · Static Analysis',
+    year: '2026',
+    duration: 'v1.0.0',
+    status: 'Completed',
+    featured: true,
+    accentColor: '#0A84FF', // Apple blue
+    tags: [
+      'GitHub OAuth', 'Repository Ingestion', 'Static Analysis', 'AST Parsing',
+      'Semantic Search', 'pgvector', 'OpenAI', 'RAG', '7 AI Agents',
+      'BullMQ', 'Redis', 'PostgreSQL', 'Docker', 'Next.js', 'Fastify', 'Prisma'
+    ],
+    tagCategory: ['fullstack', 'ai'],
+    github: 'https://github.com/kanishkgandecha/developer_platform',
+    demo: null,
+    description: 'An end-to-end code intelligence platform that ingests GitHub repositories, performs deterministic static analysis, enables semantic code search, and runs seven specialized AI agents to produce evidence-backed architectural, security, performance, quality, and dependency insights.',
+    problem: 'Understanding complex GitHub repositories requires combining deterministic static analysis with deep semantic context and specialized AI inspection without raw code execution risks.',
+    solution: 'Developer Platform securely ingests repos in isolated workspaces, parses TypeScript/JS ASTs and polyglot code, builds HNSW pgvector indices, and orchestrates seven specialized AI agents over BullMQ async queues.',
+    architecture: [
+      { layer: 'Frontend', detail: 'Next.js, React, TypeScript & Tailwind CSS' },
+      { layer: 'Backend API', detail: 'Fastify REST API & Prisma ORM' },
+      { layer: 'Async Queues', detail: 'BullMQ & Redis worker queue architecture' },
+      { layer: 'Static & Vector Engine', detail: 'TypeScript Compiler AST & PostgreSQL pgvector HNSW index' },
+      { layer: 'AI Multi-Agent', detail: '7 specialized OpenAI agents with RAG evidence citations' },
+      { layer: 'Infrastructure & Safety', detail: 'Docker Compose, isolated workspace extraction & IDOR security' }
+    ],
+    highlights: [
+      'GitHub OAuth authentication & secure workspace repository ingestion',
+      'AST parsing using TypeScript compiler API and polyglot heuristics',
+      'PostgreSQL + pgvector HNSW index with OpenAI embeddings for hybrid search',
+      'Seven specialized AI agents (Architecture, Quality, Security, Performance, Risk, Docs, Summary)',
+      'BullMQ + Redis asynchronous job queues with stale-job recovery',
+      'Ownership IDOR protections, encrypted tokens, and prompt-injection guardrails'
+    ],
+    metrics: [
+      { label: 'AI Agents', value: '7' },
+      { label: 'Release', value: 'v1.0.0' },
+      { label: 'Queue System', value: 'BullMQ' },
+    ],
+    modalDetails: {
+      objective: 'Build an end-to-end V1 code intelligence system that ingests raw GitHub repositories into isolated workspaces, builds AST dependency graphs, indexes code with pgvector, and coordinates 7 specialized AI agents.',
+      architecture: [
+        'Secure Ingestion: Downloaded repository archives are processed in isolated workspaces with no raw code execution.',
+        'Code Intelligence: AST parsing via TypeScript compiler API with heuristic parsing for Python, Java, C/C++, and Go.',
+        'Semantic Search: OpenAI embeddings with pgvector HNSW index, cosine similarity, hybrid ranking, and incremental hashing.',
+        '7 AI Agents: Architecture, Quality, Security, Performance, Dependency Risk, Documentation, and Executive Summary agents using structured completions and evidence citations.',
+        'Reliability & Security: BullMQ queues, Redis, PostgreSQL, Fastify API, ownership IDOR protections, and stale-job recovery.'
+      ]
+    }
+  },
   {
     id: 'medilink',
     title: 'MediLink',
@@ -237,6 +290,19 @@ export const PROJECTS = [
 // ── Engineering Notes ─────────────────────────────────────────────────────────
 
 export const ENGINEERING_NOTES = [
+  {
+    id: 'code-intelligence-rag',
+    title: 'Multi-Agent Code Intelligence & Vector Search',
+    category: 'AI & Systems Architecture',
+    date: '2026',
+    readTime: '4 min read',
+    summary: 'Orchestrating deterministic AST static analysis with pgvector semantic retrieval and bounded multi-agent AI execution.',
+    bullets: [
+      'Ingesting repository archives in isolated workspaces with strict path-safety checks, preventing raw code execution risks.',
+      'Constructing hybrid search indices by pairing OpenAI embeddings with PostgreSQL pgvector HNSW indices and incremental content hashing.',
+      'Coordinating seven specialized AI agents (Security, Performance, Architecture, Quality, Risk, Docs, Summary) over BullMQ async queues with stale-job recovery.'
+    ]
+  },
   {
     id: 'performance-optimization',
     title: 'Browser Performance & Frame Budgets',
@@ -391,20 +457,68 @@ export const CERTIFICATIONS = [
 
 export const TECH_STACK = [
   {
+    id: 'nextjs',
+    label: 'Next.js',
+    category: 'frontend',
+    recentlyUsed: ['Developer Platform'],
+    specialties: ['App Router Architecture', 'Server Components', 'React 19 Hooks'],
+    projects: ['developer-platform']
+  },
+  {
+    id: 'fastify',
+    label: 'Fastify',
+    category: 'backend',
+    recentlyUsed: ['Developer Platform'],
+    specialties: ['High-Performance REST APIs', 'Plugin Architecture', 'Schema Validation'],
+    projects: ['developer-platform']
+  },
+  {
+    id: 'postgresql',
+    label: 'PostgreSQL & pgvector',
+    category: 'databases',
+    recentlyUsed: ['Developer Platform'],
+    specialties: ['HNSW Vector Indexing', 'Cosine Similarity', 'Prisma ORM Schemas'],
+    projects: ['developer-platform']
+  },
+  {
+    id: 'redis',
+    label: 'Redis & BullMQ',
+    category: 'backend',
+    recentlyUsed: ['Developer Platform'],
+    specialties: ['Async Job Queues', 'Worker Architecture', 'Stale-Job Recovery'],
+    projects: ['developer-platform']
+  },
+  {
+    id: 'openai-rag',
+    label: 'OpenAI & RAG',
+    category: 'tools',
+    recentlyUsed: ['Developer Platform'],
+    specialties: ['7 Multi-Agent Workflows', 'Structured Completions', 'Retrieved Context Citations'],
+    projects: ['developer-platform']
+  },
+  {
+    id: 'docker',
+    label: 'Docker & Compose',
+    category: 'tools',
+    recentlyUsed: ['Developer Platform'],
+    specialties: ['Multi-Container Stacks', 'Isolated Workspaces', 'Environment Security'],
+    projects: ['developer-platform']
+  },
+  {
     id: 'react',
     label: 'React.js',
     category: 'frontend',
-    recentlyUsed: ['Portfolio', 'MediLink', 'ElectroHub'],
+    recentlyUsed: ['Developer Platform', 'Portfolio', 'MediLink', 'ElectroHub'],
     specialties: ['Component Architecture', 'State Management', 'Custom Hooks', 'Performance Optimization'],
-    projects: ['medilink', 'electrohub', 'ai-resume']
+    projects: ['developer-platform', 'medilink', 'electrohub', 'ai-resume']
   },
   {
     id: 'typescript',
     label: 'TypeScript',
     category: 'frontend',
-    recentlyUsed: ['Portfolio', 'MedMarvel Modules'],
-    specialties: ['Strict Type Systems', 'Interface Contracts', 'Generics'],
-    projects: ['medilink']
+    recentlyUsed: ['Developer Platform', 'Portfolio', 'MedMarvel Modules'],
+    specialties: ['AST Compiler API', 'Strict Type Systems', 'Interface Contracts'],
+    projects: ['developer-platform', 'medilink']
   },
   {
     id: 'javascript',
@@ -412,7 +526,7 @@ export const TECH_STACK = [
     category: 'languages',
     recentlyUsed: ['Portfolio', 'MediLink', 'Weather Dashboard'],
     specialties: ['Async/Await & Promises', 'ES6+ Syntax', 'DOM Manipulation'],
-    projects: ['medilink', 'electrohub', 'ai-resume', 'weather']
+    projects: ['developer-platform', 'medilink', 'electrohub', 'ai-resume', 'weather']
   },
   {
     id: 'nodejs',
@@ -434,9 +548,9 @@ export const TECH_STACK = [
     id: 'restapi',
     label: 'REST APIs',
     category: 'backend',
-    recentlyUsed: ['Portfolio', 'MediLink', 'ElectroHub', 'Weather'],
+    recentlyUsed: ['Developer Platform', 'Portfolio', 'MediLink', 'ElectroHub', 'Weather'],
     specialties: ['Endpoint Design', 'JSON Serialization', 'HTTP Status Standards'],
-    projects: ['medilink', 'electrohub', 'weather']
+    projects: ['developer-platform', 'medilink', 'electrohub', 'weather']
   },
   {
     id: 'mongodb',
@@ -474,17 +588,17 @@ export const TECH_STACK = [
     id: 'tailwindcss',
     label: 'Tailwind CSS',
     category: 'frontend',
-    recentlyUsed: ['Portfolio', 'AI Resume Analyzer'],
+    recentlyUsed: ['Developer Platform', 'Portfolio', 'AI Resume Analyzer'],
     specialties: ['Design Token Utility', 'Responsive Breakpoints', 'Theme Management'],
-    projects: ['ai-resume']
+    projects: ['developer-platform', 'ai-resume']
   },
   {
     id: 'git',
     label: 'Git & GitHub',
     category: 'tools',
-    recentlyUsed: ['Portfolio', 'MediLink', 'ElectroHub'],
+    recentlyUsed: ['Developer Platform', 'Portfolio', 'MediLink', 'ElectroHub'],
     specialties: ['Feature Branching', 'Pull Requests', 'Version Control'],
-    projects: ['medilink', 'electrohub', 'ai-resume', 'weather']
+    projects: ['developer-platform', 'medilink', 'electrohub', 'ai-resume', 'weather']
   }
 ];
 
