@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, X, ExternalLink, Cpu, Layers, Database, Shield, Zap } from 'lucide-react';
 import { PROJECTS } from '../../data/portfolio';
 import SectionHeader from '../ui/SectionHeader';
+import ProjectCaseStudy from './ProjectCaseStudy';
 
 const GithubIcon = ({ size = 16 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
@@ -308,6 +309,9 @@ export default function Projects() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Extended engineering case study (only rendered when a project defines one) */}
+                  {activeProject.caseStudy && <ProjectCaseStudy project={activeProject} />}
 
                   {/* Actions & Metrics Footer */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
