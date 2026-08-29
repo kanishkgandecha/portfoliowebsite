@@ -32,10 +32,10 @@ export default function Contact() {
   return (
     <section id="contact" className="section">
       <div className="container">
-        <SectionHeader 
+        <SectionHeader
           eyebrow="Contact"
           title="Get In Touch"
-          subtitle="Open for internships, full-stack projects, and technical questions."
+          subtitle="Seeking Full-Stack, Native iOS, and Software Engineering opportunities."
         />
 
         {/* Main Glass Communication Desk Container */}
@@ -47,7 +47,7 @@ export default function Contact() {
           className="glass-bright"
           style={{
             borderRadius: '24px',
-            padding: '2.5rem',
+            padding: 'var(--window-padding, 2.5rem)',
             maxWidth: '920px',
             margin: '2rem auto 0',
             border: '1px solid var(--border-bright)',
@@ -78,11 +78,12 @@ export default function Contact() {
                 letterSpacing: '-0.025em',
                 lineHeight: 1.25,
               }}>
-                Let’s build something extraordinary together.
+                Looking for a software engineer who can work across product, reliability, and systems?
               </h3>
 
               <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                I am actively seeking <strong>Software Engineering Internships</strong> for immediate roles. Whether you have a project, an internship opportunity, or a technical inquiry, feel free to reach out.
+                I am actively seeking <strong>Full-Stack, Native iOS, and Software Engineering</strong> internship and graduate opportunities. Whether you have a role, a project, or a technical question, reach out at{' '}
+                <strong>{PERSONAL.email}</strong>.
               </p>
 
               {/* Instant Copy Email Widget */}
@@ -90,15 +91,23 @@ export default function Contact() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                rowGap: '0.6rem',
                 background: 'rgba(0, 0, 0, 0.25)',
                 border: '1px solid var(--border-bright)',
                 borderRadius: '14px',
                 padding: '0.75rem 1rem',
                 marginTop: '0.5rem',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <Mail size={16} style={{ color: 'var(--accent)' }} />
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 500 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0 }}>
+                  <Mail size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+                  <span style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.85rem',
+                    color: 'var(--text-primary)',
+                    fontWeight: 500,
+                    overflowWrap: 'anywhere',
+                  }}>
                     {PERSONAL.email}
                   </span>
                 </div>
@@ -106,16 +115,18 @@ export default function Contact() {
                 <Button
                   variant="ghost"
                   onClick={handleCopyEmail}
-                  style={{ padding: '0.35rem 0.75rem', fontSize: '0.78rem', borderRadius: '8px' }}
+                  aria-label={copied ? 'Email address copied' : 'Copy email address'}
+                  aria-live="polite"
+                  style={{ padding: '0.5rem 0.85rem', fontSize: '0.78rem', borderRadius: '8px', minHeight: '38px', flexShrink: 0 }}
                 >
                   {copied ? (
                     <>
-                      <Check size={13} style={{ color: 'var(--accent)' }} />
+                      <Check size={13} style={{ color: 'var(--accent)' }} aria-hidden="true" />
                       <span style={{ color: 'var(--accent)' }}>Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Copy size={13} />
+                      <Copy size={13} aria-hidden="true" />
                       <span>Copy</span>
                     </>
                   )}
@@ -234,7 +245,7 @@ export default function Contact() {
                   <FileText size={18} style={{ color: 'var(--accent)' }} />
                   <div>
                     <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>Resume PDF</div>
-                    <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Download Verified Resume</div>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>View Resume — /resume.pdf</div>
                   </div>
                 </div>
                 <ArrowUpRight size={16} style={{ color: 'var(--text-tertiary)' }} />

@@ -117,7 +117,7 @@ export default function Hero() {
               letterSpacing: '-0.035em',
               color: 'var(--text-primary)',
             }}>
-              I build full-stack web applications, AI tools, and interactive graphics.
+              {PERSONAL.headline}
             </h1>
 
             {/* Short, conversational bio */}
@@ -125,9 +125,9 @@ export default function Hero() {
               fontSize: '1.05rem',
               color: 'var(--text-secondary)',
               lineHeight: 1.65,
-              maxWidth: '500px',
+              maxWidth: '540px',
             }}>
-              Computer engineering student in Mumbai focused on clean code, performant systems, and intuitive user experiences.
+              {PERSONAL.shortBio}
             </p>
 
             {/* Focus Chips */}
@@ -158,11 +158,9 @@ export default function Hero() {
                 <ArrowRight size={15} />
               </Button>
 
-              <a href={PERSONAL.resume} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                <Button variant="ghost">
-                  <FileText size={15} />
-                  <span>Resume</span>
-                </Button>
+              <a href={PERSONAL.resume} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
+                <FileText size={15} />
+                <span>Resume</span>
               </a>
 
               <Button variant="ghost" onClick={() => handleScrollTo('contact')}>
@@ -249,18 +247,27 @@ export default function Hero() {
                 {/* Center Section: Avatar (90px) & Info */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', position: 'relative', zIndex: 3 }}>
                   <div style={{ position: 'relative', flexShrink: 0 }}>
-                    <img 
-                      src={PERSONAL.avatar} 
-                      alt={PERSONAL.name}
-                      style={{
-                        width: '90px',
-                        height: '90px',
-                        borderRadius: '22px',
-                        objectFit: 'cover',
-                        border: '2.5px solid var(--accent)',
-                        boxShadow: '0 10px 24px rgba(0,0,0,0.3)',
-                      }}
-                    />
+                    <picture>
+                      <source type="image/webp" srcSet={PERSONAL.avatarSrcSet.webp} sizes="90px" />
+                      <source type="image/jpeg" srcSet={PERSONAL.avatarSrcSet.jpg} sizes="90px" />
+                      <img
+                        src="/images/profile-320.jpg"
+                        alt={PERSONAL.name}
+                        width={90}
+                        height={90}
+                        loading="eager"
+                        fetchPriority="high"
+                        decoding="async"
+                        style={{
+                          width: '90px',
+                          height: '90px',
+                          borderRadius: '22px',
+                          objectFit: 'cover',
+                          border: '2.5px solid var(--accent)',
+                          boxShadow: '0 10px 24px rgba(0,0,0,0.3)',
+                        }}
+                      />
+                    </picture>
                     <div style={{
                       position: 'absolute',
                       bottom: '-3px',
@@ -286,6 +293,9 @@ export default function Hero() {
                     </h2>
                     <span style={{ fontSize: '0.92rem', color: 'var(--accent)', fontWeight: 600 }}>
                       {PERSONAL.title}
+                    </span>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                      {PERSONAL.specialization}
                     </span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>
                       <MapPin size={13} style={{ color: 'var(--text-tertiary)' }} />
@@ -318,11 +328,13 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* Footer Status Strip: Currently Exploring */}
+                {/* Footer Status Strip: Currently Building */}
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  rowGap: '0.4rem',
                   background: 'var(--bg-surface-solid)',
                   padding: '0.65rem 1rem',
                   borderRadius: '12px',
@@ -330,11 +342,11 @@ export default function Hero() {
                   position: 'relative',
                   zIndex: 3,
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
-                    <Sparkles size={13} style={{ color: 'var(--accent)' }} />
-                    <span>Currently Exploring: Full Stack & Viz</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.76rem', color: 'var(--text-secondary)', minWidth: 0 }}>
+                    <Sparkles size={13} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+                    <span style={{ overflowWrap: 'break-word' }}>{PERSONAL.currentlyBuilding}</span>
                   </div>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: 'var(--accent)', fontWeight: 600 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: 'var(--accent)', fontWeight: 600, flexShrink: 0 }}>
                     CGPA {PERSONAL.cgpa}
                   </span>
                 </div>

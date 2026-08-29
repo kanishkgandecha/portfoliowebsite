@@ -45,6 +45,7 @@ export default function Experience() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'relative' }}>
               {EXPERIENCE.map((job, idx) => {
                 const isExpanded = expandedItem === job.id;
+                const panelId = `experience-panel-${job.id}`;
                 return (
                   <motion.div
                     key={job.id}
@@ -54,29 +55,45 @@ export default function Experience() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: idx * 0.1 }}
                     style={{
-                      padding: '1.35rem 1.5rem',
-                      cursor: 'pointer',
                       background: 'var(--bg-surface-solid)',
                       borderRadius: '16px',
                       border: '1px solid var(--border)',
                       borderLeft: job.current ? '4px solid var(--accent)' : '1px solid var(--border)',
                       transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
                       boxShadow: 'var(--shadow-sm)',
+                      overflow: 'hidden',
                     }}
-                    onClick={() => toggleExpand(job.id)}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => toggleExpand(job.id)}
+                      aria-expanded={isExpanded}
+                      aria-controls={panelId}
+                      style={{
+                        width: '100%',
+                        textAlign: 'left',
+                        fontFamily: 'inherit',
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '1.35rem 1.5rem',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        gap: '1rem',
+                      }}
+                    >
                       <div>
-                        <h4 style={{
+                        <div style={{
                           fontFamily: 'var(--font-display)',
                           fontSize: '1.05rem',
                           fontWeight: 650,
                           color: 'var(--text-primary)',
                         }}>
                           {job.role}
-                        </h4>
+                        </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                          <Building size={13} style={{ color: 'var(--text-tertiary)' }} />
+                          <Building size={13} style={{ color: 'var(--text-tertiary)' }} aria-hidden="true" />
                           <span>{job.company}</span>
                         </div>
                       </div>
@@ -94,31 +111,33 @@ export default function Experience() {
                           alignItems: 'center',
                           gap: '0.3rem',
                         }}>
-                          <Calendar size={11} />
+                          <Calendar size={11} aria-hidden="true" />
                           <span>{job.period}</span>
                         </span>
 
-                        <ChevronDown 
-                          size={16} 
+                        <ChevronDown
+                          size={16}
+                          aria-hidden="true"
                           style={{
                             color: 'var(--text-tertiary)',
                             transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                             transition: 'transform 0.25s ease'
-                          }} 
+                          }}
                         />
                       </div>
-                    </div>
+                    </button>
 
                     <AnimatePresence initial={false}>
                       {isExpanded && (
                         <motion.div
+                          id={panelId}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.25 }}
-                          style={{ overflow: 'hidden' }}
+                          style={{ overflow: 'hidden', padding: '0 1.5rem' }}
                         >
-                          <div style={{ marginTop: '1.25rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+                          <div style={{ marginTop: '1.25rem', borderTop: '1px solid var(--border)', paddingTop: '1rem', paddingBottom: '1.35rem' }}>
                             <p style={{
                               fontSize: '0.88rem',
                               color: 'var(--text-secondary)',

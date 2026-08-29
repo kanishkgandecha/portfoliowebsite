@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Folder, Briefcase, User, Mail, FileText, CornerDownLeft, BookOpen, Cpu, Check } from 'lucide-react';
+import { Search, Folder, Briefcase, User, Mail, FileText, CornerDownLeft, BookOpen, Cpu, Check, X } from 'lucide-react';
+import { useDialogA11y } from '../../hooks/useDialogA11y';
 
 const GithubIcon = ({ size = 16 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
@@ -38,6 +40,8 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
   const [isMobile, setIsMobile] = useState(false);
   const inputRef = useRef(null);
   const listRef = useRef(null);
+  const dialogRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -73,7 +77,13 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
       scrollToSection(action.section);
       onClose();
     } else if (action.href) {
-      window.open(action.href, '_blank', 'noopener,noreferrer');
+      // Internal routes (e.g. /projects/kue) navigate within the SPA;
+      // external URLs open in a new tab.
+      if (action.href.startsWith('/')) {
+        navigate(action.href);
+      } else {
+        window.open(action.href, '_blank', 'noopener,noreferrer');
+      }
       onClose();
     } else if (action.action === 'resume') {
       window.open(PERSONAL.resume, '_blank', 'noopener,noreferrer');
@@ -88,14 +98,14 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
     }
   };
 
+  // Focus trap, Escape-to-close, and focus restoration are shared with other dialogs.
+  useDialogA11y({ isOpen, onClose, containerRef: dialogRef });
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isOpen) return;
 
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-      } else if (e.key === 'ArrowDown') {
+      if (e.key === 'ArrowDown') {
         e.preventDefault();
         setSelectedIndex((prev) => (prev + 1) % Math.max(1, filteredActions.length));
       } else if (e.key === 'ArrowUp') {
@@ -144,6 +154,10 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
           onClick={onClose}
         >
           <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Command palette"
             variants={sheetVariants}
             initial="hidden"
             animate="visible"
@@ -158,6 +172,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
               boxShadow: '0 25px 60px rgba(0,0,0,0.75)',
               border: '1px solid var(--border-bright)',
               background: 'var(--bg-surface-solid)',
+              position: 'relative',
             }}
           >
             {/* Toast Feedback Banner when Copy Email selected */}
@@ -194,7 +209,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
               borderBottom: '1px solid var(--border)',
               gap: '0.85rem'
             }}>
-              <Search size={18} style={{ color: 'var(--accent)' }} />
+              <Search size={18} style={{ color: 'var(--accent)' }} aria-hidden="true" />
               <input
                 ref={inputRef}
                 type="text"
@@ -204,6 +219,12 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                   setSelectedIndex(0);
                 }}
                 placeholder="Type a command or search workspace..."
+                aria-label="Search commands"
+                role="combobox"
+                aria-expanded="true"
+                aria-controls="palette-listbox"
+                aria-autocomplete="list"
+                aria-activedescendant={filteredActions[selectedIndex] ? `palette-option-${filteredActions[selectedIndex].id}` : undefined}
                 style={{
                   flex: 1,
                   background: 'none',
@@ -215,7 +236,7 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                 }}
               />
               {!isMobile && (
-                <span style={{
+                <span aria-hidden="true" style={{
                   fontSize: '0.72rem',
                   fontFamily: 'var(--font-mono)',
                   color: 'var(--text-tertiary)',
@@ -227,11 +248,33 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                   ESC
                 </span>
               )}
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close command palette"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-tertiary)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '32px',
+                  height: '32px',
+                  flexShrink: 0,
+                }}
+              >
+                <X size={16} aria-hidden="true" />
+              </button>
             </div>
 
             {/* Raycast Action Items List */}
-            <div 
+            <div
               ref={listRef}
+              role="listbox"
+              id="palette-listbox"
+              aria-label="Commands"
               style={{
                 maxHeight: isMobile ? '50vh' : '340px',
                 overflowY: 'auto',
@@ -246,6 +289,9 @@ export default function CommandPalette({ isOpen, onClose, scrollToSection }) {
                   return (
                     <div
                       key={action.id}
+                      id={`palette-option-${action.id}`}
+                      role="option"
+                      aria-selected={isSelected}
                       onClick={() => handleAction(action)}
                       onMouseEnter={() => {
                         if (!isMobile) {

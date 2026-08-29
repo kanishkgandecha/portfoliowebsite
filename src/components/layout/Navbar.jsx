@@ -118,17 +118,24 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
                 }}
                 title="Return to Hero centerpiece"
               >
-                <img 
-                  src={PERSONAL.avatar} 
-                  alt={PERSONAL.name}
-                  style={{
-                    width: '26px',
-                    height: '26px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    border: '1.5px solid var(--accent)',
-                  }}
-                />
+                <picture>
+                  <source type="image/webp" srcSet={PERSONAL.avatarSmall.webp} />
+                  <img
+                    src={PERSONAL.avatarSmall.jpg}
+                    alt={PERSONAL.name}
+                    width={26}
+                    height={26}
+                    loading="lazy"
+                    decoding="async"
+                    style={{
+                      width: '26px',
+                      height: '26px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '1.5px solid var(--accent)',
+                    }}
+                  />
+                </picture>
                 <span style={{ 
                   fontFamily: "'Dancing Script', cursive, sans-serif", 
                   fontSize: '1.15rem', 
@@ -251,8 +258,9 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
                 gap: '0.3rem',
               }}
               title="Open Command Palette (Cmd+K)"
+              aria-label="Open command palette"
             >
-              <Command size={11} strokeWidth={1.75} />
+              <Command size={11} strokeWidth={1.75} aria-hidden="true" />
               <span style={{ fontFamily: 'var(--font-mono)' }}>K</span>
             </button>
 
@@ -269,8 +277,9 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
                 justifyContent: 'center',
               }}
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
-              {theme === 'light' ? <Moon size={14} strokeWidth={1.75} /> : <Sun size={14} strokeWidth={1.75} />}
+              {theme === 'light' ? <Moon size={14} strokeWidth={1.75} aria-hidden="true" /> : <Sun size={14} strokeWidth={1.75} aria-hidden="true" />}
             </button>
           </div>
         </motion.div>
@@ -316,7 +325,7 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '2px',
-                  height: '42px',
+                  height: '44px',
                   background: isActive ? 'var(--bg-surface-2)' : 'transparent',
                   border: 'none',
                   borderRadius: '12px',
@@ -347,9 +356,10 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
         <button
           onClick={toggleTheme}
           className="glass-bright"
+          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           style={{
-            width: '42px',
-            height: '42px',
+            width: '44px',
+            height: '44px',
             borderRadius: '50%',
             border: '1px solid var(--border-bright)',
             boxShadow: 'var(--shadow-md)',
@@ -361,7 +371,7 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             padding: 0,
           }}
         >
-          {theme === 'light' ? <Moon size={15} strokeWidth={1.75} /> : <Sun size={15} strokeWidth={1.75} />}
+          {theme === 'light' ? <Moon size={15} strokeWidth={1.75} aria-hidden="true" /> : <Sun size={15} strokeWidth={1.75} aria-hidden="true" />}
         </button>
       </div>
 
@@ -377,9 +387,10 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
         <button
           onClick={onOpenPalette}
           className="glass-bright"
+          aria-label="Open command palette"
           style={{
-            width: '42px',
-            height: '42px',
+            width: '44px',
+            height: '44px',
             borderRadius: '50%',
             border: '1px solid var(--border-bright)',
             boxShadow: 'var(--shadow-md)',
@@ -391,7 +402,7 @@ export default function FloatingNav({ activeSection, scrollToSection, onOpenPale
             padding: 0,
           }}
         >
-          <Command size={15} strokeWidth={1.75} />
+          <Command size={15} strokeWidth={1.75} aria-hidden="true" />
         </button>
       </div>
     </>

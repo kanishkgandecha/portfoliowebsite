@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, X, ExternalLink, Cpu, Layers, Database, Shield, Zap } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowRight, ExternalLink, Layers } from 'lucide-react';
 import { PROJECTS } from '../../data/portfolio';
 import SectionHeader from '../ui/SectionHeader';
 import ProjectCaseStudy from './ProjectCaseStudy';
@@ -12,139 +13,176 @@ const GithubIcon = ({ size = 16 }) => (
   </svg>
 );
 
-export default function Projects() {
-  const [selectedId, setSelectedId] = useState(null);
+// ── Card action row: real, independent links — every project uses the exact
+// same component and interaction, whether it's the flagship or an earlier one.
+function ProjectActions({ project }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+      <Link
+        to={`/projects/${project.id}`}
+        className="btn btn-primary"
+        style={{ padding: '0.5rem 1rem', fontSize: '0.82rem', minHeight: '40px' }}
+      >
+        <span>View Case Study</span>
+        <ArrowRight size={14} />
+      </Link>
 
-  const activeProject = PROJECTS.find((p) => p.id === selectedId);
+      {project.github && (
+        <a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-ghost"
+          style={{ padding: '0.5rem 1rem', fontSize: '0.82rem', minHeight: '40px' }}
+          aria-label={`View ${project.title} source on GitHub`}
+        >
+          <GithubIcon size={14} />
+          <span>View Source</span>
+        </a>
+      )}
+
+      {project.demo && (
+        <a
+          href={project.demo}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-ghost"
+          style={{ padding: '0.5rem 1rem', fontSize: '0.82rem', minHeight: '40px' }}
+          aria-label={`${project.title} live demo`}
+        >
+          <ExternalLink size={14} />
+          <span>Live Demo</span>
+        </a>
+      )}
+    </div>
+  );
+}
+
+// ── One card component for every project, primary or earlier. `compact`
+// only adjusts spacing/type scale — never color, controls, or behavior.
+function ProjectCard({ project, compact = false }) {
+  const metrics = project.metrics || [];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.4 }}
+      style={{
+        background: 'var(--bg-surface-solid)',
+        border: '1px solid var(--border)',
+        borderRadius: compact ? '16px' : '20px',
+        padding: compact ? '1.35rem' : '1.75rem',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        gap: compact ? '1rem' : '1.25rem',
+        boxShadow: 'var(--shadow-sm)',
+        position: 'relative',
+      }}
+    >
+      {/* Category + status + year */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <span style={{
+          fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: project.accentColor || 'var(--accent)',
+          background: `${project.accentColor || 'var(--accent)'}15`, padding: '0.2rem 0.6rem', borderRadius: '100px',
+          border: `1px solid ${project.accentColor || 'var(--accent)'}30`,
+        }}>
+          {project.category}
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {project.status && project.status !== 'Completed' && (
+            <span style={{
+              fontSize: '0.68rem', fontFamily: 'var(--font-mono)', fontWeight: 650, color: '#FF9F0A',
+              background: 'rgba(255,159,10,0.1)', border: '1px solid rgba(255,159,10,0.3)', padding: '0.15rem 0.5rem', borderRadius: '100px',
+            }}>
+              {project.status}
+            </span>
+          )}
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
+            {project.year}
+          </span>
+        </div>
+      </div>
+
+      {/* Name & one-line description */}
+      <div>
+        <h3 style={{
+          fontFamily: 'var(--font-display)', fontSize: compact ? '1.1rem' : '1.35rem', fontWeight: 700,
+          color: 'var(--text-primary)', letterSpacing: '-0.02em',
+        }}>
+          {project.title}
+        </h3>
+        <div style={{ fontSize: '0.82rem', color: 'var(--accent)', fontWeight: 500, marginTop: '0.15rem' }}>
+          {project.subtitle}
+        </div>
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginTop: '0.75rem' }}>
+          {project.description}
+        </p>
+      </div>
+
+      {/* Up to three verified metrics */}
+      {metrics.length > 0 && (
+        <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+          {metrics.slice(0, 3).map((m) => (
+            <div key={m.label}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', fontWeight: 700, color: project.accentColor || 'var(--accent)' }}>
+                {m.value}
+              </div>
+              <div style={{ fontSize: '0.66rem', color: 'var(--text-tertiary)', maxWidth: '110px', lineHeight: 1.3 }}>{m.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Tech chips */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+        {project.tags.slice(0, compact ? 5 : project.tags.length).map((tag) => (
+          <span key={tag} style={{
+            fontSize: '0.7rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)',
+            background: 'var(--bg-surface-2)', padding: '0.2rem 0.55rem', borderRadius: '6px', border: '1px solid var(--border)',
+            overflowWrap: 'anywhere',
+          }}>
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* Actions row — real, independent, keyboard-accessible controls */}
+      <div style={{ paddingTop: '0.85rem', borderTop: '1px solid var(--border)' }}>
+        <ProjectActions project={project} />
+      </div>
+    </motion.div>
+  );
+}
+
+export default function Projects() {
+  const primaryProjects = PROJECTS.filter((p) => p.tier === 'primary');
+  const earlierProjects = PROJECTS.filter((p) => p.tier === 'earlier');
 
   return (
     <section id="projects" className="section">
       <div className="container">
-        <SectionHeader 
+        <SectionHeader
           eyebrow="Projects"
           title="Selected Work"
-          subtitle="Click any project card to expand details and view software architecture."
+          subtitle="Full-stack platforms, native iOS, and real-time systems — open View Case Study for architecture and engineering depth."
         />
 
-        {/* Projects Cards Grid */}
+        {/* Primary Selected Work grid */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: '1.75rem',
           marginTop: '2rem',
         }}>
-          {PROJECTS.map((project) => (
-            <motion.div
-              key={project.id}
-              layoutId={`card-container-${project.id}`}
-              onClick={() => setSelectedId(project.id)}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
-              style={{
-                background: 'var(--bg-surface-solid)',
-                border: '1px solid var(--border)',
-                borderRadius: '20px',
-                padding: '1.75rem',
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                gap: '1.25rem',
-                boxShadow: 'var(--shadow-sm)',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-              whileHover={{ 
-                translateY: -4, 
-                borderColor: 'var(--border-bright)',
-                boxShadow: 'var(--shadow-md)' 
-              }}
-            >
-              {/* Top Accent Strip */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{
-                  fontSize: '0.72rem',
-                  fontFamily: 'var(--font-mono)',
-                  color: project.accentColor || 'var(--accent)',
-                  background: `${project.accentColor || 'var(--accent)'}15`,
-                  padding: '0.2rem 0.6rem',
-                  borderRadius: '100px',
-                  border: `1px solid ${project.accentColor || 'var(--accent)'}30`,
-                }}>
-                  {project.category}
-                </span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                  {project.year}
-                </span>
-              </div>
-
-              {/* Title & Description */}
-              <div>
-                <motion.h3 
-                  layoutId={`card-title-${project.id}`}
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: '1.35rem',
-                    fontWeight: 700,
-                    color: 'var(--text-primary)',
-                    letterSpacing: '-0.02em',
-                  }}
-                >
-                  {project.title}
-                </motion.h3>
-                <div style={{ fontSize: '0.82rem', color: 'var(--accent)', fontWeight: 500, marginTop: '0.15rem' }}>
-                  {project.subtitle}
-                </div>
-                <p style={{
-                  fontSize: '0.88rem',
-                  color: 'var(--text-secondary)',
-                  lineHeight: 1.6,
-                  marginTop: '0.75rem',
-                }}>
-                  {project.description}
-                </p>
-              </div>
-
-              {/* Architecture & Tech Chips */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-                {project.tags.map((tag) => (
-                  <span 
-                    key={tag}
-                    style={{
-                      fontSize: '0.7rem',
-                      fontFamily: 'var(--font-mono)',
-                      color: 'var(--text-secondary)',
-                      background: 'var(--bg-surface-2)',
-                      padding: '0.2rem 0.55rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--border)',
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              {/* Card Footer Action */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingTop: '0.85rem',
-                borderTop: '1px solid var(--border)',
-                fontSize: '0.8rem',
-                fontWeight: 500,
-                color: 'var(--text-primary)',
-              }}>
-                <span>Expand Workspace Window</span>
-                <ArrowRight size={14} style={{ color: 'var(--accent)' }} />
-              </div>
-            </motion.div>
+          {primaryProjects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
           ))}
         </div>
 
+<<<<<<< HEAD
         {/* Workspace Window Expanded Viewport Overlay */}
         <AnimatePresence>
           {selectedId && activeProject && (
@@ -344,9 +382,29 @@ export default function Projects() {
 
                 </div>
               </motion.div>
+=======
+        {/* Earlier Projects — same card, smaller footprint */}
+        {earlierProjects.length > 0 && (
+          <div style={{ marginTop: '3.5rem' }}>
+            <h3 style={{
+              fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 650, color: 'var(--text-primary)',
+              marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem',
+            }}>
+              <Layers size={17} style={{ color: 'var(--text-tertiary)' }} aria-hidden="true" />
+              <span>Earlier Projects</span>
+            </h3>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+              gap: '1.25rem',
+            }}>
+              {earlierProjects.map((project) => (
+                <ProjectCard key={project.id} project={project} compact />
+              ))}
+>>>>>>> 3229452 (fix(portfolio): finalize project navigation and remove unsupported weather metrics)
             </div>
-          )}
-        </AnimatePresence>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -1,11 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 
-export function useActiveSection(sectionIds = []) {
+/**
+ * Tracks which home-page section is currently in view via IntersectionObserver.
+ *
+ * `enabled` gates the whole thing: pass `false` while on a route that doesn't
+ * contain these section ids (e.g. a project page) so the observer doesn't sit
+ * around watching nothing. It's re-created every time `enabled` flips back to
+ * `true`, so returning to the home route always re-attaches to the freshly
+ * mounted section elements rather than stale/detached ones from a previous
+ * mount.
+ */
+export function useActiveSection(sectionIds = [], enabled = true) {
   const [activeSection, setActiveSection] = useState(sectionIds[0] || '');
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef(null);
 
   useEffect(() => {
+    if (!enabled) return undefined;
+
     // Detect when the smooth scroll has finished
     const handleScroll = () => {
       if (!isScrollingRef.current) return;
@@ -48,15 +60,12 @@ export function useActiveSection(sectionIds = []) {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      sectionIds.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) observer.unobserve(el);
-      });
+      observer.disconnect();
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
     };
-  }, [sectionIds]);
+  }, [sectionIds, enabled]);
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);

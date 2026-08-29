@@ -1,40 +1,42 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Award, ExternalLink, Code2, Cpu, Zap, Layers } from 'lucide-react';
+import { GraduationCap, Award, ExternalLink, Code2, Layers, Zap, Smartphone } from 'lucide-react';
 import { PERSONAL, CERTIFICATIONS } from '../../data/portfolio';
 import SectionHeader from '../ui/SectionHeader';
 
+// Mirrors PERSONAL.focusAreas — the four primary capability labels used
+// consistently across Hero, About, and page metadata.
 export default function About() {
   const pillars = [
     {
       icon: Layers,
-      title: 'Full Stack Engineering',
-      desc: 'Building end-to-end MERN applications with React frontends, Express APIs, and indexed databases.',
+      title: 'Full-Stack Engineering',
+      desc: 'React, Next.js, and TypeScript frontends over Node.js/Fastify/Express APIs, PostgreSQL, MongoDB, Redis, and Docker.',
     },
     {
-      icon: Cpu,
-      title: 'Interactive Visualization',
-      desc: 'Developing browser viewports for multi-dimensional data and high-frequency interaction.',
-    },
-    {
-      icon: Code2,
-      title: 'AI Systems Integration',
-      desc: 'Integrating Gemini LLM APIs into web apps for report analysis and chat workflows.',
+      icon: Smartphone,
+      title: 'Native iOS',
+      desc: 'Swift, SwiftUI, and SwiftData apps with WidgetKit, ActivityKit, App Intents, and Apple platform integrations.',
     },
     {
       icon: Zap,
-      title: 'Performance & Security',
-      desc: 'Keeping web apps fast and secure with 60fps frame budgets, JWT auth, and role permissions.',
+      title: 'Real-Time Systems',
+      desc: 'Live data pipelines using PostgreSQL LISTEN/NOTIFY and Server-Sent Events for second-to-second updates.',
+    },
+    {
+      icon: Code2,
+      title: 'AI Developer Tools',
+      desc: 'Orchestrating multi-agent AI workflows over deterministic static analysis and semantic code search.',
     },
   ];
 
   return (
     <section id="about" className="section">
       <div className="container">
-        <SectionHeader 
+        <SectionHeader
           eyebrow="About"
           title="Background & Focus"
-          subtitle="Computer Engineering student building full-stack applications, interactive graphics, and AI tools."
+          subtitle="Computer Engineering student building full-stack web systems, native iOS applications, real-time platforms, and AI developer tools."
         />
 
         <div style={{
@@ -72,14 +74,14 @@ export default function About() {
               </p>
 
               <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '0.85rem' }}>
-                I build full-stack web applications, REST APIs, and interactive browser tools.
+                I'm a <strong>Full-Stack &amp; Native iOS Software Engineer</strong> — I build full-stack, real-time platforms with React/Next.js, Node.js, and PostgreSQL, and native apps with Swift and SwiftUI. Most recently: a Formula 1 live-data pipeline and a privacy-focused SwiftData-backed event planner.
               </p>
 
               <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-                I focus on writing clean code, building fast interfaces, and solving real-world engineering problems.
+                I focus on data migration safety, reliability, privacy, and automated testing across everything I ship.
               </p>
 
-              {/* Stats Row */}
+              {/* Stats Row — verified engineering metrics only */}
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr 1fr',
@@ -97,16 +99,16 @@ export default function About() {
 
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                    2026
+                    749
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>Graduation Year</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>Kue Tests Passed</div>
                 </div>
 
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--accent)' }}>
-                    100%
+                    7
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>Clean Code Focus</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>AI Agents Orchestrated</div>
                 </div>
               </div>
             </div>
@@ -147,15 +149,16 @@ export default function About() {
                       </p>
                     </div>
 
-                    <a 
-                      href={cert.link} 
-                      target="_blank" 
+                    <a
+                      href={cert.credentialUrl || cert.link}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="btn-icon"
-                      style={{ width: '32px', height: '32px' }}
-                      title="View Certificate"
+                      style={{ width: '44px', height: '44px' }}
+                      title={cert.credentialUrl ? 'View Certificate' : 'View Course'}
+                      aria-label={`${cert.credentialUrl ? 'View certificate' : 'View course'}: ${cert.title}`}
                     >
-                      <ExternalLink size={13} />
+                      <ExternalLink size={13} aria-hidden="true" />
                     </a>
                   </div>
                 ))}
@@ -165,6 +168,15 @@ export default function About() {
 
           {/* Right Column: 4 Interactive Core Pillars */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <h3 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '1.05rem',
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+              marginBottom: '0.25rem',
+            }}>
+              Core Focus Areas
+            </h3>
             {pillars.map((pillar, idx) => {
               const Icon = pillar.icon;
               return (

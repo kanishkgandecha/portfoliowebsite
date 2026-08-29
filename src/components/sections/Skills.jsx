@@ -87,17 +87,21 @@ export default function Skills() {
             {filteredTech.map((tech, idx) => {
               const isSelected = tech.id === activeSkillId;
               return (
-                <motion.div
+                <motion.button
                   key={tech.id}
+                  type="button"
                   onClick={() => setActiveSkillId(tech.id)}
                   onMouseEnter={() => setActiveSkillId(tech.id)}
+                  onFocus={() => setActiveSkillId(tech.id)}
+                  aria-pressed={isSelected}
+                  aria-label={`${tech.label} — show details`}
                   initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ 
-                    opacity: 1, 
+                  animate={{
+                    opacity: 1,
                     scale: isSelected ? 1.05 : 1,
                     y: [0, -2, 0],
                   }}
-                  transition={{ 
+                  transition={{
                     y: { duration: 3, repeat: Infinity, ease: 'easeInOut', delay: idx * 0.2 },
                     scale: { duration: 0.2 },
                     opacity: { duration: 0.3 }
@@ -107,16 +111,18 @@ export default function Skills() {
                     border: '1px solid',
                     borderColor: isSelected ? 'var(--accent)' : 'var(--border-bright)',
                     padding: '0.65rem 1.1rem',
+                    minHeight: '44px',
                     borderRadius: '100px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
+                    fontFamily: 'inherit',
                     boxShadow: isSelected ? '0 0 15px rgba(48, 209, 88, 0.2)' : 'var(--shadow-sm)',
                     transition: 'border-color 0.2s ease, background 0.2s ease',
                   }}
                 >
-                  <span style={{
+                  <span aria-hidden="true" style={{
                     width: '8px',
                     height: '8px',
                     borderRadius: '50%',
@@ -129,7 +135,7 @@ export default function Skills() {
                   }}>
                     {tech.label}
                   </span>
-                </motion.div>
+                </motion.button>
               );
             })}
           </div>

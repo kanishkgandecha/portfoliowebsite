@@ -31,10 +31,15 @@ export default function EngineeringNotes() {
             {ENGINEERING_NOTES.map((note) => {
               const isActive = note.id === activeNoteId;
               return (
-                <motion.div
+                <motion.button
                   key={note.id}
+                  type="button"
                   onClick={() => setActiveNoteId(note.id)}
+                  aria-pressed={isActive}
                   style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    fontFamily: 'inherit',
                     padding: '1.15rem 1.35rem',
                     background: isActive ? 'var(--bg-surface-solid)' : 'transparent',
                     border: '1px solid',
@@ -62,7 +67,9 @@ export default function EngineeringNotes() {
                     </span>
                   </div>
 
-                  <h4 style={{
+                  {/* Not a heading: this is a selector control's label, not page content —
+                      the full note (with its own h3) renders in the panel on the right. */}
+                  <div style={{
                     fontFamily: 'var(--font-display)',
                     fontSize: '1.05rem',
                     fontWeight: 650,
@@ -73,9 +80,9 @@ export default function EngineeringNotes() {
                     justifyContent: 'space-between',
                   }}>
                     <span>{note.title}</span>
-                    <ChevronRight size={16} style={{ opacity: isActive ? 1 : 0.4, transform: isActive ? 'translateX(2px)' : 'none', transition: 'all 0.2s ease' }} />
-                  </h4>
-                </motion.div>
+                    <ChevronRight size={16} style={{ opacity: isActive ? 1 : 0.4, transform: isActive ? 'translateX(2px)' : 'none', transition: 'all 0.2s ease' }} aria-hidden="true" />
+                  </div>
+                </motion.button>
               );
             })}
           </div>
