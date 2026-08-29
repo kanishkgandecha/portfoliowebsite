@@ -1,140 +1,97 @@
-# 🌐 Kanishk Gandecha - Portfolio Website
+# Kanishk Gandecha — Portfolio
 
-Welcome to my personal portfolio website!
-This project showcases my skills, projects, and experience as a developer.
+Personal portfolio site for Kanishk Gandecha, a Full-Stack & Native iOS
+software engineer. Built as a React + Vite single-page app with a small
+client-side router for dedicated project case-study pages.
 
----
-
-## 🚀 Live Demo
-
-🔗 Will be added soon
+🔗 Live: https://kanishkgandecha.me
 
 ---
 
-## 📌 About the Project
+## Tech Stack
 
-This is a modern, responsive portfolio website built to highlight:
+- **React 19** + **Vite** — app shell and build tooling
+- **React Router 7** — client-side routing (`/` and `/projects/:slug`)
+- **Framer Motion** — page/section animations, respects `prefers-reduced-motion`
+  via `MotionConfig`
+- **lucide-react** — icons
+- Hand-rolled CSS design system (`src/index.css`) — CSS custom properties for
+  light/dark theming, no CSS framework classes in markup (Tailwind is present
+  as a dependency but unused in JSX)
+- Plain JavaScript (no TypeScript, no test runner) — `npm run lint` (ESLint)
+  and `npm run build` are the available checks
 
-* My technical skills
-* Featured projects
-* GitHub work
-* Contact information
+## Architecture
 
----
+All content lives in one data file, `src/data/portfolio.js` — personal info,
+projects, experience, education, certifications, tech stack, and command
+palette actions. Components render from that data rather than hardcoding
+copy, so most content edits only touch that file.
 
-## 🛠️ Tech Stack
+**Routes**
+- `/` — the full single-page site (Hero → About → Experience → Projects →
+  Engineering Notes → Skills → Contact), each section addressable by hash
+  (e.g. `/#projects`)
+- `/projects/:slug` — a dedicated case-study page per project, rendered
+  through one shared template (`src/pages/ProjectCaseStudyPage.jsx` +
+  `src/components/project/ProjectSections.jsx`). A project shows only the
+  sections it has verified data for — nothing is invented to fill a gap.
 
-* ⚡ HTML5, CSS3, JavaScript
-* ⚛️ (Add React / Vite if used)
-* 🎨 Modern UI/UX Design
-* 🚀 Deployed using Vercel / GitHub Pages
+`src/components/ScrollManager.jsx` owns scroll behavior on route changes:
+resets to the top on a fresh route, or jumps straight to a `#section` hash
+when navigating there from another page (e.g. a project page's "Back to
+Selected Work" link returns to `/#projects`).
 
----
+## Project Structure
 
-## 📂 Features
-
-* ✨ Clean and responsive UI
-* 📱 Mobile-friendly design
-* 🧑‍💻 Projects showcase section
-* 🔗 GitHub integration
-* 📄 Resume download option
-* 🌙 Dark theme (if applicable)
-
----
-
-## 📁 Folder Structure
-
+```
 portfolio/
 ├── public/
-│   └── resume.pdf          # Replace with your actual resume
+│   ├── resume.pdf              # served at /resume.pdf
+│   ├── images/                 # profile photo (multiple sizes/formats) + OG image
+│   ├── sitemap.xml, robots.txt
+│   └── _headers, _redirects    # Netlify-style config (see Deployment)
 ├── src/
 │   ├── components/
-│   │   ├── layout/
-│   │   │   ├── Navbar.jsx
-│   │   │   └── Footer.jsx
-│   │   ├── sections/
-│   │   │   ├── Hero.jsx
-│   │   │   ├── About.jsx
-│   │   │   ├── Skills.jsx
-│   │   │   ├── Projects.jsx
-│   │   │   ├── Certifications.jsx
-│   │   │   └── Contact.jsx
-│   │   └── ui/
-│   │       ├── Button.jsx
-│   │       ├── Card.jsx
-│   │       ├── Section.jsx
-│   │       └── SectionTitle.jsx
-│   ├── context/
-│   │   └── ThemeContext.jsx
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-├── index.html
-├── vite.config.js
-└── package.json
+│   │   ├── layout/              # Navbar, Footer
+│   │   ├── sections/            # Hero, About, Experience, Projects, EngineeringNotes, Skills, Contact
+│   │   ├── project/              # Shared case-study section components
+│   │   ├── ui/                   # Button, Badge, GlassPanel, TechChip, SectionHeader, CommandPalette, AppWindow
+│   │   └── ScrollManager.jsx
+│   ├── pages/                    # HomePage, ProjectCaseStudyPage
+│   ├── hooks/                    # useActiveSection, useDialogA11y, useDocumentMeta, useMousePosition, useScrollDirection
+│   ├── data/portfolio.js         # single source of truth for all content
+│   ├── App.jsx, main.jsx, index.css
+├── index.html                    # SEO/meta tags, structured data, no-JS fallback
+├── vercel.json                   # Vercel SPA rewrite + resume.pdf cache headers
+└── vite.config.js
 ```
 
-## ⚙️ Installation & Setup
-
-Clone the repository:
+## Getting Started
 
 ```bash
-git clone https://github.com/yourusername/your-repo.git
-cd your-repo
-```
-
-Install dependencies:
-
-```bash
+git clone https://github.com/kanishkgandecha/portfoliowebsite.git
+cd portfoliowebsite
 npm install
+npm run dev       # start the dev server
+npm run build     # production build to dist/
+npm run preview   # preview the production build locally
+npm run lint      # ESLint
 ```
 
-Run the development server:
+## Deployment
 
-```bash
-npm run dev
-```
+Static build (`npm run build` → `dist/`), deployable to any static host.
+Both `vercel.json` and `public/_redirects` / `public/_headers` are included
+so the SPA routes (`/projects/:slug`) work and `/resume.pdf` is served with
+revalidation-friendly caching, whether the host is Vercel or Netlify.
 
-Build for production:
+## Contact
 
-```bash
-npm run build
-```
+- Email: kanishk.gandecha09@gmail.com
+- LinkedIn: https://www.linkedin.com/in/kanishk-gandecha/
+- GitHub: https://github.com/kanishkgandecha
 
----
+## License
 
-## 🌐 Deployment
-
-This project can be deployed using:
-
-* Vercel (Recommended)
-* GitHub Pages
-* Netlify
-
----
-
-
-## 📬 Contact Me
-
-* 📧 Email: gandechakanishk9@gmail.com
-* 💼 LinkedIn:https://www.linkedin.com/in/kanishk-gandecha-24b1a22b3/
-* 💻 GitHub: https://github.com/yourusernamkanishkgandecha
-
----
-
-## ⭐ Acknowledgements
-
-* Inspiration from modern developer portfolios
-* Open-source community
-
----
-
-## 📄 License
-
-This project is open-source and available under the MIT License.
-
----
-
-⭐ If you like this project, consider giving it a star!
-
-
+MIT
